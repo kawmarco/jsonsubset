@@ -4,9 +4,20 @@ import math
 from hypothesis import given
 from hypothesis.strategies import text, integers, floats
 from hypothesis.strategies import none, lists, recursive
-from hypothesis.strategies import booleans
+from hypothesis.strategies import booleans, dictionaries
 
 import json_parser
+
+#from https://hypothesis.readthedocs.io/en/latest/data.html#recursive-data
+JSON_LIST = (
+    recursive(none() | floats(allow_nan=False) | integers() | booleans() | text(),
+    lambda children: lists(children))
+)
+
+JSON_FULL = (
+    recursive(none() | floats(allow_nan=False) | integers() | booleans() | text(),
+    lambda children: lists(children)| dictionaries(text(), children))
+)
 
 def test_init():
     parser = json_parser.Parser(b'{}', True)
@@ -48,16 +59,24 @@ def test_null():
 
     assert parsed == None
 
-@given(recursive(none() | floats(allow_nan=False) | integers() | booleans() | text(), lambda children: lists(children)))
-def test_array(a):
-    parser = json_parser.Parser(json.dumps(a).encode("utf-8"), True)
-    parsed = parser.parse()
-
-    assert parsed == a
-
 @given(booleans())
 def test_bool(b):
     parser = json_parser.Parser(json.dumps(b).encode("utf-8"), True)
     parsed = parser.parse()
 
     assert parsed == b
+
+@given(JSON_LIST)
+def test_array(a):
+    parser = json_parser.Parser(json.dumps(a).encode("utf-8"), True)
+    parsed = parser.parse()
+
+    assert parsed == a
+
+
+@given(JSON_FULL)
+def test_obj(obj):
+    parser = json_parser.Parser(json.dumps(obj).encode("utf-8"), True)
+    parsed = parser.parse()
+
+    assert parsed == obj

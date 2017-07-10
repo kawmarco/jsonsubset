@@ -34,7 +34,7 @@ cdef class Parser:
         if c == b'{':
             value = self._parse_obj(expr)
 
-        if c == b'"':
+        elif c == b'"':
             value = self._parse_str()
 
         elif c == b'[':
@@ -59,7 +59,23 @@ cdef class Parser:
         self.last = c
 
     cdef Value _parse_obj(self, expr):
-        raise NotImplementedError()
+        cdef Value ret = Value()
+        ret.start = self.i
+        self.i += 1
+
+        while self.consume() != b'}':
+            self._parse(False)
+            self.i += 1
+
+            if self.consume() == b',':
+                self.i += 1
+
+            elif self.consume() == b':':
+                self.i += 1
+
+        ret.end = self.i
+        assert ret.end[0] == b'}'
+        return ret
 
     cdef StringValue _parse_str(self):
         cdef StringValue ret = StringValue()
