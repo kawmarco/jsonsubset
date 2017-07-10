@@ -2,7 +2,7 @@ import json
 import math
 
 from hypothesis import given
-from hypothesis.strategies import text, integers, floats
+from hypothesis.strategies import text, integers, floats, none, lists, recursive
 
 import json_parser
 
@@ -45,3 +45,10 @@ def test_null():
     parsed = parser.parse()
 
     assert parsed == None
+
+@given(recursive(none() |  floats(allow_nan=False) | text(), lambda children: lists(children)))
+def test_array(a):
+    parser = json_parser.Parser(json.dumps(a).encode("utf-8"), True)
+    parsed = parser.parse()
+
+    assert parsed == a

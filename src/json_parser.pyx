@@ -1,4 +1,4 @@
-import ujson
+import json
 
 cdef class Parser:
     """
@@ -7,13 +7,19 @@ cdef class Parser:
     cdef char* json_bytes
     cdef int json_bytes_len
 
+    # this is needed to hold reference to the original byte string
+    # so that the GC doesn't free it before we're done with it
+    cdef object json_bytes_python
+
     cdef char* i
 
     cdef int num_parsed
     cdef int expr_len
     cdef object expr
+    cdef char last
 
     def __cinit__(self, json_bytes_python, expr):
+        self.json_bytes_python = json_bytes_python
         self.json_bytes = self.i = json_bytes_python
         self.json_bytes_len = len(json_bytes_python)
         self.num_parsed = 0
@@ -34,7 +40,7 @@ cdef class Parser:
         elif c == b'[':
             value = self._parse_array()
 
-        elif b'-' <= c <= b'9' or c in (b'I', b'N'): # 'I' -> "Infinity", 'N' -> NaN
+        elif b'-' <= c <= b'9' or c in (b'I', b'N'): # 'I' -> "Infinity", 'N' -> "NaN"
             value = self._parse_num()
 
         elif c == 'n':
@@ -42,10 +48,12 @@ cdef class Parser:
 
         else:
             # bug (or invalid json)
-            assert False, (repr(self.json_bytes), repr(self.i))
+            assert False, (chr(self.last), self.json_bytes, self.i-self.json_bytes, len(self.json_bytes), chr(self.i[0]))
 
         if expr == True:
             return value.get()
+
+        self.last = c
 
     cdef Value _parse_obj(self, expr):
         raise NotImplementedError()
@@ -64,27 +72,41 @@ cdef class Parser:
                 self.i += 1
 
         ret.end = self.i
+        assert ret.end[0] == b'"'
 
         return ret
 
     cdef Value _parse_array(self):
-        raise NotImplementedError()
+        cdef Value ret = Value()
+        ret.start = self.i
+        self.i += 1
+
+        while self.consume() != b']':
+            self._parse(False)
+            self.i += 1
+
+            if self.consume() == b',':
+                self.i += 1
+
+        ret.end=self.i
+        assert ret.end[0] == b']'
+        return ret
 
     cdef _parse_num(self):
         cdef NumberValue ret = NumberValue()
         ret.start = self.i
 
-        while (self.i[0] not in b' ,\x00}]'):
+        while (self.i[1] not in b' ,\x00}]'):
             self.i += 1
 
-        ret.end = self.i - 1
+        ret.end = self.i
         return ret
 
     cdef _parse_null(self):
         cdef NullValue ret = NullValue()
         ret.start = self.i
 
-        self.i += 4 # == len("null")
+        self.i += 3 # == len("null") - 1
 
         ret.end = self.i
         return ret
@@ -112,7 +134,7 @@ cdef class Value:
     cdef char* end
 
     def get(self):
-        return ujson.loads(self.start[:self.end-self.start+1])
+        return json.loads(self.start[:self.end-self.start+1].decode("utf-8"))
 
 cdef class StringValue(Value):
     # TODO: Implement an optimised .get() method.
