@@ -32,10 +32,10 @@ cdef class Parser:
             value = self._parse_str()
 
         elif c == b'[':
-            ret = self._parse_array()
+            value = self._parse_array()
 
-        elif c >= '0' and c <= '9':
-            ret = self._parse_num()
+        elif b'-' <= c <= b'9' or c in (b'I', b'N'): # 'I' -> "Infinity", 'N' -> NaN
+            value = self._parse_num()
 
         else:
             # bug (or invalid json)
@@ -67,8 +67,15 @@ cdef class Parser:
     cdef Value _parse_array(self):
         raise NotImplementedError()
 
-    cdef Value _parse_num(self):
-        raise NotImplementedError()
+    cdef _parse_num(self):
+        cdef NumberValue ret = NumberValue()
+        ret.start = self.i
+
+        while (self.i[0] not in b' ,\x00}]'):
+            self.i += 1
+
+        ret.end = self.i - 1
+        return ret
 
     cdef char consume(self):
         # just get next non-space character
@@ -103,3 +110,23 @@ cdef class StringValue(Value):
     # def get(self):
     #     return self.start[1:self.end-self.start].decode("utf-8")
     pass
+
+cdef class NumberValue(Value):
+    def get(self):
+        # TODO: Benchmark and improve this code
+        s = self.start[:self.end-self.start+1]
+
+        if s == b'Infinity':
+            return float('inf')
+
+        elif s == b'-Infinity':
+            return float('-inf')
+
+        elif s == b'NaN':
+            return float('nan')
+
+        elif not b'.' in s and not b'e' in s:
+            return int(s)
+
+        else:
+            return float(s)
