@@ -39,3 +39,9 @@ def test_num_floats(i):
         math.isnan(parsed) and math.isnan(i)
     )
     assert type(parsed) == type(i)
+
+def test_null():
+    parser = json_parser.Parser(json.dumps(None).encode("utf-8"), True)
+    parsed = parser.parse()
+
+    assert parsed == None

@@ -37,9 +37,12 @@ cdef class Parser:
         elif b'-' <= c <= b'9' or c in (b'I', b'N'): # 'I' -> "Infinity", 'N' -> NaN
             value = self._parse_num()
 
+        elif c == 'n':
+            value = self._parse_null()
+
         else:
             # bug (or invalid json)
-            assert False, (repr(self.json_bytes), int(self.i), repr(self.i))
+            assert False, (repr(self.json_bytes), repr(self.i))
 
         if expr == True:
             return value.get()
@@ -75,6 +78,15 @@ cdef class Parser:
             self.i += 1
 
         ret.end = self.i - 1
+        return ret
+
+    cdef _parse_null(self):
+        cdef NullValue ret = NullValue()
+        ret.start = self.i
+
+        self.i += 4 # == len("null")
+
+        ret.end = self.i
         return ret
 
     cdef char consume(self):
@@ -130,3 +142,7 @@ cdef class NumberValue(Value):
 
         else:
             return float(s)
+
+cdef class NullValue(Value):
+    def get(self):
+        return None
