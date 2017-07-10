@@ -1,6 +1,10 @@
 import json
 from fixtures import gen_expr
 import tests.reference_implementation
+import json_parser
+
+from hypothesis import given
+from tests.hypothesis_strategies import JSON_FULL_LITE
 
 TEST_CASES = [
     {},
@@ -22,10 +26,16 @@ def test_predefined_cases(gen_expr):
 
         for expr in gen_expr(test_case):
             reference = tests.reference_implementation.subset(expr, test_case_bytes)
-
-            # no actual implementation yet, just running reference implementation for now
-            # TODO: add actual implementation here
-            actual = reference
+            actual = json_parser.Parser(test_case_bytes, expr).parse()
+            
             assert actual == reference
 
-#TODO property-based testing (using hypothesis)
+@given(JSON_FULL_LITE)
+def test_random_cases(gen_expr, test_case):
+    test_case_bytes = json.dumps(test_case).encode("utf-8")
+
+    for expr in gen_expr(test_case):
+        reference = tests.reference_implementation.subset(expr, test_case_bytes)
+        actual = json_parser.Parser(test_case_bytes, expr).parse()
+
+        assert actual == reference

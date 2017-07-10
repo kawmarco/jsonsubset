@@ -53,25 +53,40 @@ cdef class Parser:
             # bug (or invalid json)
             assert False, (chr(self.last), self.json_bytes, self.i-self.json_bytes, len(self.json_bytes), chr(self.i[0]))
 
-        if expr == True:
+        if expr is not False:
             return value.get()
 
         self.last = c
 
-    cdef Value _parse_obj(self, expr):
-        cdef Value ret = Value()
+    cdef ObjectValue _parse_obj(self, expr):
+        cdef ObjectValue ret = ObjectValue()
         ret.start = self.i
         self.i += 1
 
+        if expr is not False:
+            ret.obj = {}
+
         while self.consume() != b'}':
-            self._parse(False)
+            key = self._parse_str().get()
+            self.i += 1
+
+            self.consume() # consume ':'
+            self.i += 1
+            
+            if expr is True:
+                ret.obj[key] = self._parse(True) 
+
+            elif (expr is False) or (key not in expr):
+                value = self._parse(False)
+
+            else:
+                ret.obj[key] = self._parse(expr[key])
+
             self.i += 1
 
             if self.consume() == b',':
                 self.i += 1
 
-            elif self.consume() == b':':
-                self.i += 1
 
         ret.end = self.i
         assert ret.end[0] == b'}'
@@ -200,3 +215,9 @@ cdef class NumberValue(Value):
 cdef class NullValue(Value):
     def get(self):
         return None
+
+cdef class ObjectValue(Value):
+    cdef object obj
+
+    def get(self):
+       return self.obj
