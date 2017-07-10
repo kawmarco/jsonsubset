@@ -40,6 +40,9 @@ cdef class Parser:
         elif c == b'[':
             value = self._parse_array()
 
+        elif c in (b't', b'f'): # 't' -> "true", 'f' -> "false"
+            value = self._parse_bool()
+
         elif b'-' <= c <= b'9' or c in (b'I', b'N'): # 'I' -> "Infinity", 'N' -> "NaN"
             value = self._parse_num()
 
@@ -107,6 +110,19 @@ cdef class Parser:
         ret.start = self.i
 
         self.i += 3 # == len("null") - 1
+
+        ret.end = self.i
+        return ret
+
+    cdef _parse_bool(self):
+        cdef Value ret = Value()
+        ret.start = self.i
+
+        if self.i[0] == 't':
+            self.i += 3 # == len("true") - 1
+
+        elif self.i[0] == 'f':
+            self.i += 4 # == len("false") - 1
 
         ret.end = self.i
         return ret
