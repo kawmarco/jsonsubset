@@ -1,5 +1,5 @@
-
 cd $(dirname $0)
+source venv/bin/activate
 
 export PYTHONPATH=src:.
-venv/bin/python3 -m pytest tests "$@"
+py.test tests "$@"
