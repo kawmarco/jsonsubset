@@ -1,5 +1,5 @@
 import json
-import json_parser
+cimport json_parser
 
 cdef class JsonSubset:
     cdef object compiled_expr
@@ -9,7 +9,7 @@ cdef class JsonSubset:
         self.compiled_expr = self._compile(expr)
         self.expr_len = self._expr_len(expr)
 
-    def parse(self, json_bytes):
+    def parse(self, bytes json_bytes):
         return json_parser.Parser(
             json_bytes,
             self.compiled_expr,

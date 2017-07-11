@@ -1,23 +1,9 @@
-import json
-import ujson
+from json_parser_values cimport *
 
 cdef class Parser:
     """
     This class concentrates all parser state and parsing methods for each type
     """
-    cdef char* json_bytes
-    cdef int json_bytes_len
-
-    # this is needed to hold reference to the original byte string
-    # so that the GC doesn't free it before we're done with it
-    cdef object json_bytes_python
-
-    cdef char* i
-
-    cdef int num_parsed
-    cdef int expr_len
-    cdef object expr
-    cdef char last
 
     def __cinit__(self, bytes json_bytes_python, expr, int expr_len):
         self.json_bytes_python = json_bytes_python
@@ -30,10 +16,10 @@ cdef class Parser:
         self.num_parsed = 0
         self.expr_len = expr_len
 
-    def parse(self):
+    cpdef object parse(self):
         return self._parse(self.expr)
 
-    cpdef _parse(self, expr):
+    cdef object _parse(self, object expr):
         cdef char c = self.consume()
 
         if c == b'{':
@@ -181,61 +167,3 @@ cdef class Parser:
             self.i += 1
 
         return self.i[0]
-
-cdef class Value:
-    """
-    This class is meant to:
-        -Hold character offsets of a JSON structure
-        -Provide a method that transforms the raw JSON string
-         from .start to .end to a Python object in .get()
-
-    This superclass delegates actual parsing to ujson.loads(), but
-    subclasses are encouraged to implement faster parsing methods
-    for their own specialised types.
-    """
-
-    cdef char* start
-    cdef char* end
-
-    def get(self):
-        return json.loads(self.start[:self.end-self.start+1].decode("utf-8"))
-
-    cdef bytes raw(self):
-        return self.start[:self.end-self.start+1]
-
-cdef class StringValue(Value):
-    cdef int safe
-    cpdef str get(self):
-        if self.safe:
-            return self.start[1:self.end-self.start].decode("utf-8")
-        return ujson.loads(self.start[:self.end-self.start+1])
-
-cdef class NumberValue(Value):
-    def get(self):
-        # TODO: Benchmark and improve this code
-        s = self.start[:self.end-self.start+1]
-
-        if s == b'Infinity':
-            return float('inf')
-
-        elif s == b'-Infinity':
-            return float('-inf')
-
-        elif s == b'NaN':
-            return float('nan')
-
-        elif not b'.' in s and not b'e' in s:
-            return int(s)
-
-        else:
-            return float(s)
-
-cdef class NullValue(Value):
-    def get(self):
-        return None
-
-cdef class ObjectValue(Value):
-    cdef dict obj
-
-    cpdef dict get(self):
-       return self.obj
