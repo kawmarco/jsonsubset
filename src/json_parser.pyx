@@ -19,12 +19,16 @@ cdef class Parser:
     cdef object expr
     cdef char last
 
-    def __cinit__(self, json_bytes_python, expr):
+    def __cinit__(self, json_bytes_python, expr, expr_len):
         self.json_bytes_python = json_bytes_python
         self.json_bytes = self.i = json_bytes_python
         self.json_bytes_len = len(json_bytes_python)
-        self.num_parsed = 0
         self.expr = expr
+
+        # optimisation: if num_parsed == expr_len (i.e. if we already parsed
+        # all statements set as True in the expression), we can stop parsing
+        self.num_parsed = 0
+        self.expr_len = expr_len
 
     def parse(self):
         return self._parse(self.expr)
@@ -57,6 +61,9 @@ cdef class Parser:
         if expr is not False:
             return value.get()
 
+        if expr is True:
+            self.num_parsed += 1
+
         self.last = c
 
     cdef ObjectValue _parse_obj(self, expr):
@@ -67,8 +74,13 @@ cdef class Parser:
         if expr is not False:
             ret.obj = {}
 
-        while self.consume() != b'}':
+        cdef StringValue key
+        cdef bytes key_raw
+
+        while (self.consume() != b'}') and (self.num_parsed < self.expr_len):
             key = self._parse_str()
+            key_raw = key.raw()
+
             self.i += 1
 
             self.consume() # consume ':'
@@ -77,11 +89,11 @@ cdef class Parser:
             if expr is True:
                 ret.obj[key.get()] = self._parse(True)
 
-            elif (expr is False) or (key.raw() not in expr):
+            elif (expr is False) or (key_raw not in expr):
                 value = self._parse(False)
 
             else:
-                ret.obj[key.get()] = self._parse(expr[key.raw()])
+                ret.obj[key.get()] = self._parse(expr[key_raw])
 
             self.i += 1
 
@@ -90,7 +102,6 @@ cdef class Parser:
 
 
         ret.end = self.i
-        assert ret.end[0] == b'}'
         return ret
 
     cdef StringValue _parse_str(self):
@@ -107,7 +118,6 @@ cdef class Parser:
                 self.i += 1
 
         ret.end = self.i
-        assert ret.end[0] == b'"'
 
         return ret
 
@@ -116,7 +126,7 @@ cdef class Parser:
         ret.start = self.i
         self.i += 1
 
-        while self.consume() != b']':
+        while self.consume() != b']' and self.num_parsed < self.expr_len:
             self._parse(False)
             self.i += 1
 
@@ -124,7 +134,6 @@ cdef class Parser:
                 self.i += 1
 
         ret.end=self.i
-        assert ret.end[0] == b']'
         return ret
 
     cdef _parse_num(self):
