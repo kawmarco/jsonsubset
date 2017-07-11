@@ -1,4 +1,5 @@
 import json
+import ujson
 
 cdef class Parser:
     """
@@ -67,20 +68,20 @@ cdef class Parser:
             ret.obj = {}
 
         while self.consume() != b'}':
-            key = self._parse_str().get()
+            key = self._parse_str()
             self.i += 1
 
             self.consume() # consume ':'
             self.i += 1
-            
-            if expr is True:
-                ret.obj[key] = self._parse(True) 
 
-            elif (expr is False) or (key not in expr):
+            if expr is True:
+                ret.obj[key.get()] = self._parse(True)
+
+            elif (expr is False) or (key.raw() not in expr):
                 value = self._parse(False)
 
             else:
-                ret.obj[key] = self._parse(expr[key])
+                ret.obj[key.get()] = self._parse(expr[key.raw()])
 
             self.i += 1
 
@@ -183,14 +184,13 @@ cdef class Value:
     def get(self):
         return json.loads(self.start[:self.end-self.start+1].decode("utf-8"))
 
+    cdef bytes raw(self):
+        return self.start[:self.end-self.start+1]
+
 cdef class StringValue(Value):
     # TODO: Implement an optimised .get() method.
-    # TIP: The naive implementation below doesn't work due to
-    #      how JSON escapes unicode characters (with '\u' prefix):
-    #
-    # def get(self):
-    #     return self.start[1:self.end-self.start].decode("utf-8")
-    pass
+    def get(self):
+        return ujson.loads(self.start[:self.end-self.start+1])
 
 cdef class NumberValue(Value):
     def get(self):

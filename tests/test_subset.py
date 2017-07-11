@@ -1,7 +1,7 @@
 import json
 from fixtures import gen_expr
 import tests.reference_implementation
-import json_parser
+import subset
 
 from hypothesis import given
 from tests.hypothesis_strategies import JSON_FULL_LITE
@@ -13,6 +13,7 @@ TEST_CASES = [
     "ábçdé",
     4129830912830,
     {"id": 1},
+    {'/': None},
     {"id": "123"},
     {"id": "ábçdé"},
     {"a": {"nested": "value"}},
@@ -26,9 +27,9 @@ def test_predefined_cases(gen_expr):
 
         for expr in gen_expr(test_case):
             reference = tests.reference_implementation.subset(expr, test_case_bytes)
-            actual = json_parser.Parser(test_case_bytes, expr).parse()
-            
-            assert actual == reference
+            actual = subset.JsonSubset(expr).parse(test_case_bytes)
+
+            assert reference == actual
 
 @given(JSON_FULL_LITE)
 def test_random_cases(gen_expr, test_case):
@@ -36,6 +37,6 @@ def test_random_cases(gen_expr, test_case):
 
     for expr in gen_expr(test_case):
         reference = tests.reference_implementation.subset(expr, test_case_bytes)
-        actual = json_parser.Parser(test_case_bytes, expr).parse()
+        actual = subset.JsonSubset(expr).parse(test_case_bytes)
 
-        assert actual == reference
+        assert reference == actual

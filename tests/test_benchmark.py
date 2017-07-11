@@ -2,9 +2,9 @@ import pytest
 import hashlib
 
 import ujson
-import json_parser
+import subset
 
-SAMPLE_SIZE = 1000
+SAMPLE_SIZE = 500
 
 def test_bench_small_ujson(benchmark, small_json):
     bench = benchmark(lambda: parse_ujson(small_json))
@@ -20,15 +20,15 @@ def test_bench_medium_json_subset(benchmark, medium_json):
     expr = {"id": True, "status": True}
     bench = benchmark(lambda: parse_json_subset(medium_json, expr))
 
+## utils ##
 def parse_ujson(test_samples):
     for sample in test_samples:
         ujson.loads(sample)
 
 def parse_json_subset(test_samples, expr):
     for sample in test_samples:
-        json_parser.Parser(sample, expr).parse()
+        subset.JsonSubset(expr).parse(sample)
 
-## utils ##
 def md5(x):
     return hashlib.md5(str(x).encode('utf-8')).hexdigest()
 
@@ -50,8 +50,8 @@ def medium_json():
                 "a_number": i/3,
                 "a_bool": True
             },
-            "id": md5(i), 
-            "status": md5(i+SAMPLE_SIZE), 
+            "id": md5(i),
+            "status": md5(i+SAMPLE_SIZE),
             "i": i,
         }).encode("utf-8")
         for i in range(SAMPLE_SIZE)
