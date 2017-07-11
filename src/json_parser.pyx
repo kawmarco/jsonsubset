@@ -19,7 +19,7 @@ cdef class Parser:
     cdef object expr
     cdef char last
 
-    def __cinit__(self, json_bytes_python, expr, expr_len):
+    def __cinit__(self, json_bytes_python, expr, int expr_len):
         self.json_bytes_python = json_bytes_python
         self.json_bytes = self.i = json_bytes_python
         self.json_bytes_len = len(json_bytes_python)
@@ -33,7 +33,7 @@ cdef class Parser:
     def parse(self):
         return self._parse(self.expr)
 
-    def _parse(self, expr):
+    cdef _parse(self, expr):
         cdef char c = self.consume()
 
         if c == b'{':
@@ -51,7 +51,7 @@ cdef class Parser:
         elif b'-' <= c <= b'9' or c in (b'I', b'N'): # 'I' -> "Infinity", 'N' -> "NaN"
             value = self._parse_num()
 
-        elif c == 'n':
+        elif c == b'n': # 'n' -> "null"
             value = self._parse_null()
 
         else:
@@ -90,7 +90,7 @@ cdef class Parser:
                 ret.obj[key.get()] = self._parse(True)
 
             elif (expr is False) or (key_raw not in expr):
-                value = self._parse(False)
+                self._parse(False)
 
             else:
                 ret.obj[key.get()] = self._parse(expr[key_raw])
@@ -136,7 +136,7 @@ cdef class Parser:
         ret.end=self.i
         return ret
 
-    cdef _parse_num(self):
+    cdef NumberValue _parse_num(self):
         cdef NumberValue ret = NumberValue()
         ret.start = self.i
 
@@ -146,7 +146,7 @@ cdef class Parser:
         ret.end = self.i
         return ret
 
-    cdef _parse_null(self):
+    cdef NullValue _parse_null(self):
         cdef NullValue ret = NullValue()
         ret.start = self.i
 
@@ -159,10 +159,10 @@ cdef class Parser:
         cdef Value ret = Value()
         ret.start = self.i
 
-        if self.i[0] == 't':
+        if self.i[0] == b't':
             self.i += 3 # == len("true") - 1
 
-        elif self.i[0] == 'f':
+        elif self.i[0] == b'f':
             self.i += 4 # == len("false") - 1
 
         ret.end = self.i
