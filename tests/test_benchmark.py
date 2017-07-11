@@ -46,13 +46,17 @@ def medium_json():
         ujson.dumps({
             "nested": {
                 "list": [
-                    i*2 for i in range(SAMPLE_SIZE//2)
+                    i*2 for j in range(10)
                 ],
                 "a_number": i/3,
                 "a_bool": True
             },
             "id": md5(i),
             "status": md5(i+SAMPLE_SIZE),
+            "other_nested": {
+                "a_bool": True,
+                "a_null": None,
+            },
             "i": i,
         }).encode("utf-8")
         for i in range(SAMPLE_SIZE)
