@@ -10,12 +10,12 @@ cdef class JsonSubset:
         self.compiled_expr = self._compile(expr)
         self.expr_len = self._expr_len(expr)
 
-    def parse(self, bytes json_bytes):
-        return json_parser.Parser(
-            json_bytes,
+    cpdef parse(self, bytes json_bytes):
+        return json_parser.parse(
+            json_bytes, 
             self.compiled_expr,
             self.expr_len
-        ).parse()
+        )
 
     @classmethod
     def _compile(cls, expr):
