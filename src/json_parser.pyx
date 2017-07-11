@@ -76,6 +76,7 @@ cdef class Parser:
 
         cdef StringValue key
         cdef bytes key_raw
+        cdef str key_str
 
         while (self.consume() != b'}') and (self.num_parsed < self.expr_len):
             key = self._parse_str()
@@ -87,13 +88,15 @@ cdef class Parser:
             self.i += 1
 
             if expr is True:
-                ret.obj[key.get()] = self._parse(True)
+                key_str = key.get()
+                ret.obj[key_str] = self._parse(True)
 
             elif (expr is False) or (key_raw not in expr):
                 self._parse(False)
 
             else:
-                ret.obj[key.get()] = self._parse(expr[key_raw])
+                key_str = key.get()
+                ret.obj[key_str] = self._parse(expr[key_raw])
 
             self.i += 1
 
@@ -107,11 +110,13 @@ cdef class Parser:
     cdef StringValue _parse_str(self):
         cdef StringValue ret = StringValue()
 
+        ret.safe = 1
         ret.start = self.i
         self.i += 1
 
         while self.i[0] != b'"':
             if self.i[0] == b'\\': #escaped char
+                ret.safe = 0
                 self.i += 2
 
             else:
@@ -197,8 +202,11 @@ cdef class Value:
         return self.start[:self.end-self.start+1]
 
 cdef class StringValue(Value):
+    cdef int safe
     # TODO: Implement an optimised .get() method.
-    def get(self):
+    cpdef str get(self):
+        if self.safe:
+            return self.start[1:self.end-self.start].decode("utf-8")
         return ujson.loads(self.start[:self.end-self.start+1])
 
 cdef class NumberValue(Value):
