@@ -58,11 +58,12 @@ cdef class Parser:
             # bug (or invalid json)
             assert False, (chr(self.last), self.json_bytes, self.i-self.json_bytes, len(self.json_bytes), chr(self.i[0]))
 
-        if expr is not False:
-            return value.get()
-
         if expr is True:
             self.num_parsed += 1
+            return value.get()
+
+        elif expr is not False:
+            return value.get()
 
         self.last = c
 
@@ -87,9 +88,10 @@ cdef class Parser:
             self.consume() # consume ':'
             self.i += 1
 
-            if expr is True:
+            if expr is True or expr is 1:
                 key_str = key.get()
-                ret.obj[key_str] = self._parse(True)
+                # using 1 instead of True to avoid self.num_parsed increment
+                ret.obj[key_str] = self._parse(1)
 
             elif (expr is False) or (key_raw not in expr):
                 self._parse(False)
@@ -203,7 +205,6 @@ cdef class Value:
 
 cdef class StringValue(Value):
     cdef int safe
-    # TODO: Implement an optimised .get() method.
     cpdef str get(self):
         if self.safe:
             return self.start[1:self.end-self.start].decode("utf-8")
