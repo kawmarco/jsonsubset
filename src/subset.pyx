@@ -1,5 +1,6 @@
 import json
 cimport json_parser
+import xxhash
 
 cdef class JsonSubset:
     cdef object compiled_expr
@@ -23,7 +24,7 @@ cdef class JsonSubset:
 
         if type(expr) == dict:
             return {
-                json.dumps(key).encode("utf-8"): cls._compile(value)
+                xxhash.hash64_bytes(json.dumps(key).encode("utf-8")): cls._compile(value)
                 for key, value in expr.items()
             }
 

@@ -18,6 +18,7 @@ cdef class Value:
 cdef class StringValue(Value):
     cdef int safe
     cpdef str get(self)
+    cdef unsigned long long hash(self)
 
 cdef class NumberValue(Value):
     pass

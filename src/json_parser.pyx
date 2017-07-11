@@ -62,12 +62,12 @@ cdef class Parser:
             ret.obj = {}
 
         cdef StringValue key
-        cdef bytes key_raw
+        cdef unsigned long long key_hash
         cdef str key_str
 
         while (self.consume() != b'}') and (self.num_parsed < self.expr_len):
             key = self._parse_str()
-            key_raw = key.raw()
+            key_hash = key.hash()
 
             self.i += 1
 
@@ -79,12 +79,12 @@ cdef class Parser:
                 # using 1 instead of True to avoid self.num_parsed increment
                 ret.obj[key_str] = self._parse(1)
 
-            elif (expr is False) or (key_raw not in expr):
+            elif (expr is False) or (key_hash not in expr):
                 self._parse(False)
 
             else:
                 key_str = key.get()
-                ret.obj[key_str] = self._parse(expr[key_raw])
+                ret.obj[key_str] = self._parse(expr[key_hash])
 
             self.i += 1
 

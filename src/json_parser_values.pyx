@@ -1,6 +1,8 @@
 import json
 import ujson
 
+cimport xxhash
+
 cdef class Value:
     def get(self):
         return json.loads(self.start[:self.end-self.start+1].decode("utf-8"))
@@ -13,6 +15,10 @@ cdef class StringValue(Value):
         if self.safe:
             return self.start[1:self.end-self.start].decode("utf-8")
         return ujson.loads(self.start[:self.end-self.start+1])
+
+    cdef unsigned long long hash(self):
+        return xxhash.hash64(self.start, self.end-self.start+1)
+
 
 cdef class NumberValue(Value):
     def get(self):
