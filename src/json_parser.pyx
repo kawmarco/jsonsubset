@@ -19,7 +19,7 @@ cdef class Parser:
     cdef object expr
     cdef char last
 
-    def __cinit__(self, json_bytes_python, expr, int expr_len):
+    def __cinit__(self, bytes json_bytes_python, expr, int expr_len):
         self.json_bytes_python = json_bytes_python
         self.json_bytes = self.i = json_bytes_python
         self.json_bytes_len = len(json_bytes_python)
@@ -33,7 +33,7 @@ cdef class Parser:
     def parse(self):
         return self._parse(self.expr)
 
-    cdef _parse(self, expr):
+    cpdef _parse(self, expr):
         cdef char c = self.consume()
 
         if c == b'{':
@@ -234,7 +234,7 @@ cdef class NullValue(Value):
         return None
 
 cdef class ObjectValue(Value):
-    cdef object obj
+    cdef dict obj
 
-    def get(self):
+    cpdef dict get(self):
        return self.obj
