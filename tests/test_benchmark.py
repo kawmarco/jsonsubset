@@ -26,8 +26,9 @@ def parse_ujson(test_samples):
         ujson.loads(sample)
 
 def parse_json_subset(test_samples, expr):
+    sub = subset.JsonSubset(expr)
     for sample in test_samples:
-        subset.JsonSubset(expr).parse(sample)
+        sub.parse(sample)
 
 def md5(x):
     return hashlib.md5(str(x).encode('utf-8')).hexdigest()
