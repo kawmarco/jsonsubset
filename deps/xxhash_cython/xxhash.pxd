@@ -1,0 +1,1 @@
+cdef unsigned long long hash64(void* s, size_t s_len)

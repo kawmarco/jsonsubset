@@ -1,0 +1,1704 @@
+commit d9e2c7bfd7237f83188b6517c62aafc52bb028aa
+Author: Yann Collet <cyan@fb.com>
+Date:   Wed Jun 14 17:07:25 2017 -0700
+
+    fixed potential realloc() error (#150)
+
+commit 7fc5ce8592f10c68506f4a070bfa6a9ab2004b44
+Author: Yann Collet <cyan@fb.com>
+Date:   Thu Jan 5 16:47:45 2017 +0100
+
+    minor cleaning
+
+commit f6dcd54a856eec56f33623ddeef462af913955cd
+Merge: 74013b9 b8f0f26
+Author: Yann Collet <Cyan4973@users.noreply.github.com>
+Date:   Thu Jan 5 16:45:31 2017 +0100
+
+    Merge pull request #98 from wuxb45/dev
+    
+    Remove unused update on local variable p32
+
+commit b8f0f26af1075c94f1a832af5a100406a96b324c
+Author: Wu Xingbo <wuxb45@gmail.com>
+Date:   Wed Jan 4 15:34:01 2017 -0600
+
+    Remove unused update on local variable p32
+
+commit 74013b9b156161a159015aa1aaccda33a89858dc
+Merge: 77fa931 23a889d
+Author: Yann Collet <Cyan4973@users.noreply.github.com>
+Date:   Fri Nov 18 12:33:42 2016 -0800
+
+    Merge pull request #94 from Ashalah/patch-1
+    
+    Fix minor compile error using XXH_ACCEPT_NULL_INPUT_POINTER
+
+commit 23a889d6377ff9e24e5a344d44c4b25aa3c18a98
+Author: Andy Robbins <raicuandi@gmail.com>
+Date:   Sat Nov 19 00:00:23 2016 +1100
+
+    Fix minor compile error using XXH_ACCEPT_NULL_INPUT_POINTER
+    
+    XXH64_endian_align() has a compile issue using XXH_ACCEPT_NULL_INPUT_POINTER, because it declares
+    
+    ` const BYTE* const bEnd = p + len;`
+    
+    and then tries to assign to it again with the line `bEnd=p=(const BYTE*)(size_t)32;`
+    
+    XXH32_endian_align() avoids this issue by declaring `const BYTE* bEnd = p + len;` (notice the pointer itself is non-const here)
+    
+    I have not looked much into this, just made the most obvious change to get it to work.
+
+commit 77fa9318a69c22388313a92eaeca0833fc41021e
+Author: Yann Collet <cyan@fb.com>
+Date:   Thu Nov 17 10:50:04 2016 -0800
+
+    minor coding style change
+
+commit b0cdfdc884ab4ab00a4b9f1e407d2ac726eaf0de
+Merge: ca39610 43fa796
+Author: Yann Collet <Cyan4973@users.noreply.github.com>
+Date:   Tue Nov 15 11:12:14 2016 -0800
+
+    Merge pull request #90 from ChrisKitching/betterCMake
+    
+    Build the xxhsum binary with cmake as well
+
+commit 43fa796c210f311bfedb061ee6c627ae227acec3
+Author: Chris Kitching <chriskitching@linux.com>
+Date:   Tue Nov 15 10:25:34 2016 +0000
+
+    Build xxhsum binary as well
+
+commit 5ab73ee82245b586f69762411edc7824d778ee2a
+Author: Chris Kitching <chriskitching@linux.com>
+Date:   Tue Nov 15 10:15:48 2016 +0000
+
+    Rely on BUILD_SHARED_LIBS instead of custom options
+    
+    Instead of having your own option for choosing between static
+    and shared versions of the library, use cmake's built-in option
+    for this:
+    https://cmake.org/cmake/help/v3.0/variable/BUILD_SHARED_LIBS.html
+    
+    Set -DBUILD_SHARED_LIBS=ON to get a shared library, and omit it
+    or set it to OFF to get a static one.
+    Can add one extra line to the cmake file to make the default be
+    shared. Makes most of the cmake crap go away.
+
+commit f89d036ed053cc1f3c5c274b3ce9d93706668d5e
+Author: Chris Kitching <chriskitching@linux.com>
+Date:   Tue Nov 15 10:07:41 2016 +0000
+
+    Declare options using option()
+    
+    This has the very slight advantage of allowing cmake to provide
+    nice documentation of available options (such as in the cmake gui,
+    if used)
+
+commit ca396108adecf7c28ed3de076664776b683d94c4
+Merge: d2df04e e580634
+Author: Yann Collet <Cyan4973@users.noreply.github.com>
+Date:   Wed Oct 26 08:52:46 2016 -0700
+
+    Merge pull request #89 from reedjc/dev
+    
+    few typo fixes in comments or docs
+
+commit e58063424a83e90fa662d165fe681fc705e7fdb4
+Author: Jeremy C. Reed <reed@reedmedia.net>
+Date:   Wed Oct 26 09:47:53 2016 -0500
+
+    few typo fixes in comments or docs
+
+commit d2df04efcbef7d7f6886d345861e5dfda4edacc1
+Author: Yann Collet <cyan@fb.com>
+Date:   Fri Sep 2 13:23:00 2016 -0700
+
+    c++ can use inline keyword
+
+commit 386a634f787ba728ef0aa50601514db74cf3b3f4
+Author: Yann Collet <cyan@fb.com>
+Date:   Thu Sep 1 21:29:02 2016 -0700
+
+    removed restrict
+
+commit 76104cf2cb8aff984a4a06afcb6d2de0959705fe
+Author: Yann Collet <cyan@fb.com>
+Date:   Tue Aug 23 11:42:53 2016 +0200
+
+    Added : make install
+
+commit 411dbc48b97932fcd6db8b1446f8afb130c525af
+Merge: 91ce5bf 6f0ca50
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 18 13:51:55 2016 +0200
+
+    Merge pull request #83 from Leandros/dev
+    
+    Replace GCC_VERSION with XXH_GCC_VERSION
+
+commit 6f0ca50e01b6e3f7c942078ab4418556937a5823
+Author: Arvid Gerstmann <dev@arvid-g.de>
+Date:   Thu Aug 18 11:54:50 2016 +0200
+
+    Replace GCC_VERSION with XXH_GCC_VERSION
+    
+    GCC_VERSION is quite a common macro name, and might clash with already
+    defined macros. It's safer to use a XXH_ prefix.
+
+commit 91ce5bf3b47ddca846e80cc9586d06c04149eda6
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Aug 14 04:28:17 2016 +0200
+
+    fixed valgrind warning
+
+commit e631a066f7bd39024ed49737a7ec9d90bb53c5d0
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Aug 14 03:31:34 2016 +0200
+
+    better, more comparable, bench at small keys
+
+commit 653221921a634a32fad0d444dfc96844f0c7adb8
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Aug 14 02:47:15 2016 +0200
+
+    fixed simple version (disabled by default)
+
+commit 5d920dcb97520355c403d5f9c134ce97f9526721
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 11 20:17:52 2016 +0200
+
+    minor comment changes
+
+commit cb11ac8234bea21af5e457e82e5939a4441c6ac8
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 11 20:07:37 2016 +0200
+
+    fixed typedef warnings
+
+commit eb1aa07a90f38f6548adac786e252b7585c6327c
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 11 19:41:20 2016 +0200
+
+    added : `XXH_NO_LONG_LONG` mode, removing `XXH64()` for platforms without 64-bits support (ex: strict C90).
+    added : C90 pedantic test
+
+commit 4fc497b71a19077c78c0d73e0b3cf623ee34f21f
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 11 19:07:23 2016 +0200
+
+    fixed minor ARM compilation warnings
+
+commit 53c451123442585aa468942c1090e1a852a0eb14
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 11 01:32:10 2016 +0200
+
+    fixed minor warning under ARM compilation
+
+commit 465bc74408c590f6ea71cff1187e16d1a3d3d712
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 11 00:53:10 2016 +0200
+
+    refactored code, for better separation between xxh32 and xxh64 (unfinished)
+
+commit cecc078eb857eba48f647c304b67842fdb4ec332
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 10 23:47:22 2016 +0200
+
+    readme note on result reproducibility
+
+commit fd2e3e8bc6df139b3c7fbae3d823d3376d40f73c
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 10 09:36:58 2016 +0200
+
+    fixed minor conversion warnings
+
+commit 0e479116d6125f19b8ec09a179cf2011f2262957
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 10 07:00:29 2016 +0200
+
+    removed date for reproducibility
+    minor `__inline`
+
+commit fb4d0d4df9002490458476fc8c720ece2d8620c5
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 10 06:55:55 2016 +0200
+
+    added namespace test
+
+commit 16bbb84a69d7560fdff1c0560e39537045148cbe
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Aug 7 00:28:30 2016 +0200
+
+    do not write (reset) into reserved
+
+commit e513f5d9d6e17bf2c85ba676b20fd9df636f8b62
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Aug 6 20:55:35 2016 +0200
+
+    extended @stbrumme suggestion to XXH64
+
+commit 61c628549feb14559884fd30610adac69eab8e97
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Aug 6 20:40:25 2016 +0200
+
+    Implemented @stbrumme suggestion in #79
+
+commit 47725a54a53399cfaac026679dd48b22a2ce6fe8
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Aug 6 20:35:56 2016 +0200
+
+    minor comment clarification
+
+commit ebd10027d0b50b3c6aa3dfef54393e7348515f9c
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Jul 10 15:55:43 2016 +0200
+
+    extend macro detection of stdint.h to match Zstandard's mem.h
+
+commit bfa93f756832928cb8885345052a9ec1101022e5
+Merge: b97d45a 73bb084
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Jul 10 12:57:42 2016 +0200
+
+    Merge branch 'dev' of github.com:Cyan4973/xxHash into dev
+
+commit b97d45ab9785a2a3bf16299b3d2ace8e3c477c38
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Jul 10 12:56:59 2016 +0200
+
+    add canonical functions to namespace emulation
+
+commit 73bb084cef6622697a2c8f6bc35651f736d0cf26
+Merge: 81f6843 359003f
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Jul 8 10:32:54 2016 +0200
+
+    Merge pull request #74 from starius/dll-to-bin
+    
+    install .dll to bin/ instead of lib/
+
+commit 359003ffe181d86a4c96f5954d18f93f4b4a9411
+Author: Boris Nagaev <bnagaev@gmail.com>
+Date:   Wed Jul 6 22:12:35 2016 +0200
+
+    install .dll to bin/ instead of lib/
+    
+    Add cmake option BUILD_SHARED_LIBS to prevent building shared library
+    on static target.
+
+commit 81f6843b1a61f10b0e8923dc4442125ad91edb74
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Jun 24 12:19:16 2016 +0200
+
+    add `XXH*_copyState()` to list for `XXH_NAMESPACE`
+
+commit 9f5e95eedfebdf5ce303b1101638e0e4dad48f9a
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Jun 21 08:40:48 2016 +0200
+
+    introduced `XXH*_copyState()` (#69)
+
+commit c8ab69ee1bb07ddd74b3332c65229d22681804e8
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Jun 21 08:29:40 2016 +0200
+
+    reverted to XXH_PRIVATE_API macro to get all functions in "static" mode
+    still need to include `xxhash.h`
+
+commit 12339ffba79450d845b69e72cd7c155b74833f8b
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Jun 21 08:21:49 2016 +0200
+
+    changed version to v0.6.1
+
+commit 059f79421e70fd793647e39aab393b7f4bf3f431
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jun 6 14:25:18 2016 +0200
+
+    fixed static analyzer warning
+
+commit 2ae8976579e1b0b4933a96ad7a901ee07365db75
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jun 6 14:22:56 2016 +0200
+
+    Improved comments
+
+commit 5fb5ae13bd52f121ebde07449332e68fd1d3b6bd
+Merge: 5062cb1 b51740d
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jun 6 14:13:44 2016 +0200
+
+    Merge branch 'dev' of github.com:Cyan4973/xxHash into dev
+
+commit 5062cb111b44ba6ee5a990948865574124eee25e
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jun 6 14:12:27 2016 +0200
+
+    changed XXH_PRIVATE_API to XXH_INCLUDE_BODY
+    now includes `xxhash.h` instead of `xxhash.c`, which feels more natural
+
+commit b51740d37e6e940fc56fd2c56554355cddc3a173
+Merge: 20d9439 374555d
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jun 2 11:25:02 2016 +0200
+
+    Merge pull request #67 from Cyan4973/Cyan4973-readme-up1
+    
+    readme update
+
+commit 374555d1ebf93e0af4580b5a580d7d1999e0ec81
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jun 2 10:55:53 2016 +0200
+
+    Update README.md
+
+commit 69b3daeb016ac6e9bb3e0b3f88fd27838a69c890
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jun 2 10:54:32 2016 +0200
+
+    Update README.md
+
+commit 9d791cfc9ef88dc19cf59f734d18e3afc14e931d
+Merge: fcabf31 20d9439
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jun 2 10:45:37 2016 +0200
+
+    Merge pull request #65 from Cyan4973/dev
+    
+    updated API for static allocation
+
+commit 20d943930190f92f493f3ec196d8d495575c0c15
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat May 28 02:38:09 2016 +0200
+
+    changed library version number, due to API change
+
+commit ad4c45bef12097f4f4ef296f79e281470e62b298
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat May 28 02:29:32 2016 +0200
+
+    removed useless inclusions
+
+commit 4a218171ea987dd6bda177c5dc5a3cb683fa56f3
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat May 28 02:14:28 2016 +0200
+
+    created protected section `XXH_STATIC_LINKING_ONLY` within `xxhash.h`
+    expose definition of `XXH32_state_t` and `XXH64_state_t` in the new section
+
+commit aba6838fdc49c46d385461b99d057142bd75d93e
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat May 28 01:11:24 2016 +0200
+
+    minor refactoring
+
+commit fec444e9803589231dc03b18ddc47fb9b9d13cfa
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu May 26 02:54:16 2016 +0200
+
+    code refactoring,
+    introduce XXH64_mergeRound() to simplify code.
+    change library version to v0.5.2
+
+commit 18e0afee8682daf29e92d682f8ac9abdfb582e57
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Apr 8 03:57:04 2016 +0200
+
+    code simplification : XXH_round()
+
+commit 31639dd0da0ee680dc4ed89dcf2684e0de14d957
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Apr 8 03:22:40 2016 +0200
+
+    changed bracket convention
+
+commit 01b8a8bd329c6f9590154566f8a085f38ce8c2dc
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Apr 8 01:50:06 2016 +0200
+
+    switched timer to <time.h> , clock_t
+
+commit 4606739e546f00093f308ee68591c940d96c9346
+Merge: 873833c 10fcb15
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Apr 8 01:19:20 2016 +0200
+
+    Merge branch 'dev' of github.com:Cyan4973/xxHash into dev
+
+commit 873833c81d4255b084ca1c0a3e283eabfccdd3fe
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Apr 8 01:19:06 2016 +0200
+
+    modified bracket convention
+
+commit 10fcb151c424df9e05c8fdeb0b26f1ecbbb2054f
+Merge: 3c7502c 7ad2406
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Mar 30 02:33:47 2016 +0200
+
+    Merge pull request #61 from cota/for-yann
+    
+    [v2] changes to increase xxhash' configurability when inlining it
+
+commit 7ad240669e11646a0926ce55ade753d59f21b837
+Author: Emilio G. Cota <cota@braap.org>
+Date:   Thu Mar 24 18:02:39 2016 -0400
+
+    xxhash: rename XXH_USELESS_ALIGN_BRANCH to XXH_FORCE_ALIGN_CHECK
+    
+    The name change also includes inverting the logic, which makes the evaluation
+    logic clearer: if FORCE_ALIGN_CHECK is set, we perform the check;
+    if not, we don't.
+    
+    While at it, allow calling code to set the flag. The use case for this
+    is the following: calling code might have a guarantee that the input data
+    is aligned. Thus, for maximum performance, it would set:
+    
+      XXH_FORCE_ALIGN_CHECK to 0, to skip the alignment check
+      XXH_FORCE_MEMORY_ACCESS 2, to copy data in chunks of 32 or 64 bits
+    
+    Without this change, there is no way to skip the alignment check on
+    certain architectures.
+    
+    Signed-off-by: Emilio G. Cota <cota@braap.org>
+
+commit efc5403144dce34e5440564889e7bb8145f0ed83
+Author: Emilio G. Cota <cota@braap.org>
+Date:   Thu Mar 24 17:39:34 2016 -0400
+
+    xxhash: allow external definition of XXH_FORCE_NATIVE_FORMAT
+    
+    This is particularly useful when inlining the library.
+    
+    Signed-off-by: Emilio G. Cota <cota@braap.org>
+
+commit e579f8e0131f687d3c50a079cbfd725038630b55
+Author: Emilio G. Cota <cota@braap.org>
+Date:   Thu Mar 24 17:49:14 2016 -0400
+
+    gitignore: ignore xxhsum and xxh(32|64)sum
+    
+    Signed-off-by: Emilio G. Cota <cota@braap.org>
+
+commit fcabf31f4e0812416a6759b6fb8716c165566470
+Merge: fec956e 3c7502c
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Mar 1 13:22:23 2016 +0100
+
+    Merge pull request #58 from Cyan4973/dev
+    
+    Dev
+
+commit 3c7502ca6047938ee0b13dd0ac84b46c624633a2
+Merge: 9d4a957 03dee59
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Feb 23 13:00:00 2016 +0100
+
+    Merge pull request #56 from t-mat/fix-xxhsum1-version
+    
+    Add -w, --version, --help and fix XXHSUM_VERSION
+
+commit 03dee591dfd0dc5c58b1194988324c57dab34808
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Tue Feb 23 14:13:38 2016 +0900
+
+    Tweak manpage structure
+    
+     - Add "xxhsum -b" in SYNOPSIS and DESCRIPTION
+     - Add example for "xxhsum -b" in EXAMPLES
+     - Add "SEE ALSO"
+
+commit f84201a652deca71d50890881df1cb08ffcc5dcc
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Mon Feb 22 22:23:29 2016 +0900
+
+    Revamp xxhsum.1
+
+commit d3653a7c837b299404f66075ad4860f5891fe3de
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Mon Feb 22 22:17:12 2016 +0900
+
+    Add help usage_advanced() message for --version and --help
+
+commit 45c322c8acb8a544c1665e1e26120bcc4ad50a2e
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Mon Feb 22 22:12:43 2016 +0900
+
+    Add --help and --version
+    
+    --help is alias of -h
+    --version is alias of -V
+
+commit 7d17c88decc7742e5d34c6510db1bd341266a713
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Mon Feb 22 22:10:25 2016 +0900
+
+    Add -w (alias of --warn)
+
+commit f55accda3907d644eea949bac232d4f19fbf5b19
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Mon Feb 22 22:06:22 2016 +0900
+
+    Fix XXHSUM_VERSION
+    
+    It muse be $(LIBVER) which is collected from xxhash.h
+
+commit 9d4a957311e30608bc5d09a69ac5070bf86760fc
+Merge: 8485bea 34e042f
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Feb 22 10:51:30 2016 +0100
+
+    Merge pull request #55 from t-mat/wip/manpage
+    
+    Add manpage and its markdown source
+
+commit 34e042f552b037b41b18944f9520443045d3d8a7
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Sun Feb 21 23:26:31 2016 +0900
+
+    Revamp xxhsum.1
+
+commit 08d61a117ddd11d22c890197baa2b2631056e108
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Sun Feb 21 23:25:24 2016 +0900
+
+    Change example output file extension
+    
+     - Use .xxh32 for -H0, 32-bit xxHash
+     - Use .xxh64 for -H1, 64-bit xxHash
+
+commit acb925f1e1db358669bcf797166efd84089f7894
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Sun Feb 21 23:20:47 2016 +0900
+
+    Emphasis "xxHash is non-cryptographic algorithm"
+    
+    Scine all short description in xxHash github repository and github.io has
+    "non-cryptographic", I added it for both short and long description in manpage.
+
+commit 63bf0638992b7e95a1a515d156678ff1c4afa010
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Sun Feb 21 23:10:20 2016 +0900
+
+    Add version number collector
+    
+     - Copied from lz4/lib/Makefile
+     - Version number is collected from xxhash.h
+
+commit 9523b75b40d1f6a4c502ad7f48425b30fb0e398d
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Sun Feb 21 22:57:42 2016 +0900
+
+    Add option descriptions for b, B, h, V, --little-endian
+    
+     - -b and -B<BLOCKSIZE> are benchmark options
+     - -h displays help
+     - -V displays version
+     - --little-endian sets hexadecimal display convension as little endian
+
+commit 96abe78db944ee31c3e95546ebf83d0ca8a65401
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Sun Feb 21 09:46:58 2016 +0900
+
+    Add EXIT STATUS, EXAMPLES, version number to xxhsum.1
+    
+    Makefile
+      - Add version number XXHSUM_VERSION
+      - Add ronn's options to add version number
+    
+    xxhsum.1.md
+    
+      - Add `EXIT STATUS` and `EXAMPLE` section
+
+commit ddbed4c2a9311f5299263882637a5d3be1321954
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Sat Feb 20 03:08:46 2016 +0900
+
+    Add manpage files: xxhsum.1 and xxhsum.1.md
+    
+    You can generate xxhsum.1 by the following procedure:
+    
+    ```
+    sudo apt-get install -y ruby-ronn
+    # make man generates xxhsum.1 from xxhsum.1.md #
+    make man
+    
+    # edit xxhsum.1.md here #
+    # auto preview for development
+    make preview-man
+    ```
+    
+    `Makefile` has the following tricky part:
+    
+    ```
+    xxhsum.1: xxhsum.1.md
+            cat $^ | $(MD2ROFF) $(MD2ROFF_FLAGS) | sed -n '/^\.\\\".*/!p' > $@
+    ```
+    
+    Last `sed` command removes `ronn`'s comment lines (`ronn`'s version, author, URL).
+    It doesn't mean disrespect for `ronn`.  We need this removal because we must
+    ignore `ronn`'s version to minimize diff.
+
+commit 8485beac0693c496a25d67c79cbf4b47c6545d17
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Feb 19 16:28:29 2016 +0100
+
+    update lib version
+
+commit 2d074826ee928f361032b19540849fcc7e1c6f93
+Merge: 84e6218 80c3562
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Feb 19 16:23:40 2016 +0100
+
+    Merge pull request #53 from t-mat/wip/check-files
+    
+    Add command line switch "-c"/"--check"
+
+commit 80c3562c60fbcd9e9e905f9c228703f4befe6aa4
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Feb 19 23:33:22 2016 +0900
+
+    Reorder operation to avoid warning for unary minus operator for unsigned type
+    
+    For example, VC++ shows the following warnings:
+    
+    1>  xxhsum.c
+    1>..\..\xxhsum.c(620): warning C4146: unary minus operator applied to unsigned type, result still unsigned
+    1>..\..\xxhsum.c(621): warning C4146: unary minus operator applied to unsigned type, result still unsigned
+    
+    The folliwing thread is good pointer for unary minus operators behaviour:
+    
+    C: unary minus operator behavior with unsigned operands
+    http://stackoverflow.com/questions/8026694/
+    
+    > 6.2.5c9 says: A computation involving unsigned operands can never overflow,
+    > because a result that cannot be represented by the resulting unsigned
+    > integer type is reduced modulo the number that is one greater than the
+    > largest value that can be represented by the resulting type.
+
+commit ecfcc51b38a6457708e5b54dadc5065b48365ad8
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Feb 19 23:21:43 2016 +0900
+
+    Add usage messages for usage() and usage_advanced()
+    
+    All messages are copied from md5sum.c in GNU coreutils.
+
+commit 3d68a13673a604f06154bd52709cb826917176ad
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Feb 19 23:10:23 2016 +0900
+
+    Add auto cleaning for test-xxhsum-c
+    
+    Follow @Cyan4973's suggestion:
+    https://github.com/Cyan4973/xxHash/pull/53#issuecomment-174521226
+
+commit ef40492536e952828726ca7a0fc8d229d5106734
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Mon Jan 25 19:25:46 2016 +0900
+
+    Add test target "test-xxhsum-c" and "clean-xxhsum-c"
+    
+     - "test-xxhsum-c" tests xxhsum -c functions.
+        - Input from file, pipe, stdin.
+        - Basic warning/error cases
+            - XXH32/64 mixed format warning.
+            - Hash mismatch error.
+            - Failed open or read error.
+     - "clean-xxhsum-c" removes temporary files for testing.
+    
+    There are potential problematic implementation:
+    
+     - Dot prefix for file name: ".test.xxh32" and ".test.xxh64"
+        - I use dot prefix to simplify glob specifier ('*' ignores dot files).
+        - Perhaps they make confusion for users.
+    
+     - "$?" shell variable and test(1)
+        - Both variable and command are widely supported, but there is potential pitfall.
+        - There are another possible solution,
+            - "||", "&&" short circuit.
+            - Shell's if..else command.
+        - Linux bash(1) : http://linux.die.net/man/1/sh
+        - FreeBSD sh : https://www.freebsd.org/cgi/man.cgi?query=sh&sektion=&n=1
+        - MacOS bash(1) : https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/sh.1.html
+        - Linux test(1) : http://linux.die.net/man/1/test
+        - FreeBSD test(1) : https://www.freebsd.org/cgi/man.cgi?test
+        - MacOS test(1) : https://developer.apple.com/library/mac/documentation/Darwin/Reference/ManPages/man1/test.1.html
+
+commit 9a648f76a8f52613d07842f144858b24d91a3397
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Mon Jan 25 18:59:01 2016 +0900
+
+    Fix stdin input for "xxhsum -c -"
+
+commit 2783350952f0f2dce6de1e9a726a42669865d669
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Jan 22 15:06:25 2016 +0900
+
+    Add redundant case for gcc -Wswitch-enum
+    
+     - gcc -Wswitch-enum warns them.  But this is completely false-positive.
+    
+    xxhsum.c:956:13: warning: enumeration value ‘GetLine_ok’ not handled in switch [-Wswitch-enum]
+                 switch (getLineResult)
+                 ^
+
+commit 779a60563ed7597cfba19284f4119405df46e442
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Jan 22 15:02:46 2016 +0900
+
+    Remove unused value
+
+commit c93b51c22eb562b18f5843ccd9bef27c017799ce
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Jan 22 14:53:32 2016 +0900
+
+    Implement variable length line reader.
+    
+     - Basic logic is same as GNU coreutil's lib/getline.c and lib/getdelim.c
+     - Since this implementation fully depends on fgetc(), there is possible performance problem.
+
+commit 2cfc7a2d6a8faf35194a735c623ead286038645d
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Jan 22 14:37:27 2016 +0900
+
+    Fix wrong format specifier (%ul -> %lu)
+
+commit 5c8aab6e6ad9787c4bfd7557237e4a5c4bc95089
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Jan 22 13:22:35 2016 +0900
+
+    Fix line number related definitions
+    
+     - To keep code simple, now line number is "unsigned long" instead of "size_t".
+     - We use "%ul" to print unsigned long.
+
+commit 80897236f9243bb3e1c429977e6d85c0214cb8e9
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Fri Jan 22 13:19:19 2016 +0900
+
+    Fix return value
+    
+     - Return value must be 0 for error.
+
+commit f47e8e1ff84855b6fea8916f1f5f27d6c46c80a2
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Wed Jan 20 23:45:52 2016 +0900
+
+    Add file check mode "-c" and related switches.
+    
+     - Add the following command line switches
+        - "-c"/"--check" : read XXH32/64 sums from FILEs and check them.
+        - "--quiet" : Don't print OK.
+        - "--status" : Don't output anything to stdout/stderr.
+        - "--strict" : Treat any invalid line as error.
+        - "--warn" : Show warning message for invalid line.
+     - If all checksum procedure is succeeded, exit code is 0.
+        - Otherwise exit code is 1.
+    
+    All avobe functions basic logics are inherited from md5sum.
+
+commit 1090f766c29fff2334a4e01c956240ef8f0f36da
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Wed Jan 20 23:06:35 2016 +0900
+
+    Split hash generation function for reusing
+    
+     - Add hash generation function BMK_hashStream() which generates hash value from file stream.
+     - First argument void* is not violate strict aliasing, but dedicated union may be good for readability.
+
+commit 36c19812632a0fdb0c56c2f4d5a9d1567d0d142d
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Wed Jan 20 22:18:53 2016 +0900
+
+    Add default hash seed symbols
+
+commit fec956e55ccab2a80779ab96fce38f85341fa861
+Merge: 4ab1e57 84e6218
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 14 15:58:33 2016 +0100
+
+    Merge pull request #52 from Cyan4973/dev
+    
+    extra static assert, as suggested by @t-mat
+
+commit 84e6218cd5bc501f7e79b36274383bf97957e830
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 14 15:20:08 2016 +0100
+
+    extra static assert, as suggested by @t-mat
+
+commit 4ab1e57e84f8768e5b14bdfa276a42d1c423065f
+Merge: f4100cf 0819df6
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 14 14:36:10 2016 +0100
+
+    Merge pull request #51 from Cyan4973/dev
+    
+    Dev
+
+commit 0819df67681d94fc052b4a586b08ff8e5f65cb67
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 14 13:51:46 2016 +0100
+
+    fix clang conversion error
+
+commit a8812895215c17d347f1a8c4cd9dbabe04e0f2f6
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 14 03:01:39 2016 +0100
+
+    new canonical API, suggested by @t-mat (#45)
+
+commit b5e9b75d84313b3409c54b42d3727fea76a3c735
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 11 01:31:04 2016 +0100
+
+    added _canonicalDigest() functions, as suggested by Takatuki Matsuoka (#45)
+
+commit ac50dc0631032aeb69ca0647b3f1136201ab0778
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 11 00:30:08 2016 +0100
+
+    Limit notification size to remain within line budget
+
+commit 5aabc409d1477563ba2dfd81035142ef71f50936
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Jan 10 17:06:34 2016 +0100
+
+    Added : --little-endian command
+
+commit f4100cf17b8b59e840f5a1374c13854a1f4c0703
+Merge: 6b5e774 dcf7bbf
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Jan 8 18:49:36 2016 +0100
+
+    Merge pull request #48 from Cyan4973/dev
+    
+    Dev
+
+commit dcf7bbf17ac9d13ff7914023b4c6be13af6afc39
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 7 23:54:51 2016 +0100
+
+    Clarified display convention as big endian (#45)
+
+commit 599514c151001a330f9ac12418d3692d18c63556
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 7 23:24:04 2016 +0100
+
+    Updated header guard (#46)
+
+commit 6b5e774632c56c731ff152fbdc0f1a7fac287de2
+Merge: b3e4aae 5cf7b71
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Jan 6 01:46:12 2016 +0100
+
+    Merge pull request #44 from Cyan4973/dev
+    
+    minor tweak, to avoid outstanding strict-aliasing warnings
+
+commit 5cf7b718c0944a34d7a87cd5e7dd2cb33940a466
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Jan 6 01:28:36 2016 +0100
+
+    minor tweak, to avoid outstanding strict-aliasing warnings
+
+commit b3e4aae28e996ec39b27cc938c264e849373a2b6
+Merge: 0be064f 99c5021
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 18:11:29 2016 +0100
+
+    Merge pull request #43 from Cyan4973/dev
+    
+    shortened macro (minor)
+
+commit 99c5021c5c76dd8deb439bf95ba154ae24da4cdc
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 18:07:03 2016 +0100
+
+    shortened macro (minor)
+
+commit 0be064f785e17f4d9a85a098e86a1df8524e21ef
+Merge: d02f016 d1d3ac7
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 18:01:57 2016 +0100
+
+    Merge pull request #42 from Cyan4973/dev
+    
+    compatibility with visual c compiler
+
+commit d1d3ac7e455bea0195f8a2f2bcdb3d2a7598f7ac
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 15:07:27 2016 +0100
+
+    compatibility with visual c compiler
+
+commit d02f01689ccc9a898c7af5af3b1f1bae102f774a
+Merge: 87c2890 6d1954f
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 13:17:53 2016 +0100
+
+    Merge pull request #41 from Cyan4973/dev
+    
+    Dev
+
+commit 6d1954f64bfd499e5ffc0c56968630469104e0a6
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 11:55:22 2016 +0100
+
+    update hyperlink
+
+commit f79f01d820e398180c564ef592f3cfd18a701046
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 11:53:34 2016 +0100
+
+    updated hyperlinks
+
+commit 87c289047111ee8901c6231ffbd9a283bc267a28
+Merge: e257a7d d34eb08
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 11:11:30 2016 +0100
+
+    Merge pull request #40 from Cyan4973/dev
+    
+    fixed uninitialized warning (false positive)
+
+commit d34eb08294c315a1aafd0f0ecf65b65b824f5c6b
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 10:58:59 2016 +0100
+
+    fixed uninitialized warning (false positive)
+
+commit e257a7d48eae7b229deaccc2846059083ac585d4
+Merge: 44a6297 88ecbf1
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 09:23:01 2016 +0100
+
+    Merge pull request #39 from Cyan4973/dev
+    
+    Dev
+
+commit 88ecbf17497b0b5d80d53061ad2194a9688390fd
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 09:06:27 2016 +0100
+
+    minor namespace tweak
+
+commit db5bacd507a4ca700b6f70c16d59f41dd99ba2c0
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 08:51:23 2016 +0100
+
+    fix test script
+
+commit 2b1cded67c0c93641dae17f09360ab94f0610efd
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 08:32:38 2016 +0100
+
+    added PRIVATE_API mode
+
+commit ba00dd010d91cf36b05861ff0c13b4d499985a39
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 06:49:41 2016 +0100
+
+    fix XXH_NAMESPACE with XXH_version()
+
+commit 3c107cbdac51b82d418f50b0f36d1fa214398853
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jan 4 05:59:11 2016 +0100
+
+    fix #36
+
+commit 44f50386874f5b310a6b85e6db27fec45749030f
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Jan 3 23:56:13 2016 +0100
+
+    introduced semantic versioning
+
+commit b55db938adc46134e589509a77d955a30fe90c3a
+Merge: ebde274 713a707
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Jan 2 20:18:22 2016 +0100
+
+    Merge branch 'dev' of github.com:Cyan4973/xxHash into dev
+
+commit ebde2748a747f65c3a535b9a2d7c55221cf26382
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Jan 2 20:18:07 2016 +0100
+
+    stricter compliance with strict aliasing gcc warnings
+
+commit 713a707a3c8a68fc99db93df3b267dd42f942727
+Merge: dcfccd2 bfa9e59
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Dec 6 12:53:25 2015 +0100
+
+    Merge pull request #38 from UbimoLTD/master
+    
+    Install both static and dynamic libraries
+
+commit bfa9e5983c920d99108dbe097564a2264faf390a
+Author: Roman Gershman <romange@gmail.com>
+Date:   Sun Dec 6 13:38:47 2015 +0200
+
+    Install both static and dynamic libraries
+
+commit 608364fa8979455ed720ad9d5efd384ab68f36d9
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Oct 1 12:57:45 2015 +0100
+
+    Updated xxHash homepage
+
+commit 44a6297b298e59ab7452defe859f21ed8371aa1c
+Merge: ee844cf dcfccd2
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 20 18:05:38 2015 +0200
+
+    Merge pull request #33 from Cyan4973/dev
+    
+    Dev
+
+commit dcfccd21766047ed0b5303255a9194e5e4844bd6
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 19 17:44:04 2015 +0100
+
+    minor refactor of `packed` method
+
+commit 87e6ba0aa433d20601d4a170e1b4c4c04cd1a293
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 19 15:26:46 2015 +0100
+
+    Added : ability to select memory access mode externally (on command line for example)
+
+commit 9ffb7e28c637360626ab793a14e2f8f97a352666
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 19 15:11:24 2015 +0100
+
+    Compatibility with GCC/ARMv7
+
+commit b605d6e2ff2a0752d84e7804bda0d49cefb03b07
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Aug 17 16:52:26 2015 +0100
+
+    XXH_FORCE_DIRECT_MEMORY_ACCESS can be disabled by being set to 0
+
+commit 68c1661a02cd808c3980d84b64171710703e16c7
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Aug 17 15:17:12 2015 +0100
+
+    new test XXH64 unaligned
+    refactor internal benchmark
+
+commit 6a6337741633c5ff04e0338c69aa6e63aa10ff12
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Aug 17 13:08:55 2015 +0100
+
+    fixed : cmake installer
+
+commit 3bfb840f4bcbef24284cfb6c966939a934466943
+Merge: fb024c0 ee844cf
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Aug 17 14:02:23 2015 +0200
+
+    Merge pull request #32 from Cyan4973/master
+    
+    cmakefile changes
+
+commit ee844cf5c6d75c9dfd87bca526fb2b1c0fa3ddd2
+Merge: 23212da e0f9b7a
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Aug 17 14:01:26 2015 +0200
+
+    Merge pull request #31 from Inkane/master
+    
+    CMakeLists.txt: support installing files
+
+commit e0f9b7acb39ebf12cd32f868c5aa7238b09d3a9d
+Author: Fabian Kosmale <0inkane@googlemail.com>
+Date:   Sun Aug 16 20:36:05 2015 +0200
+
+    CMakeLists.txt: support installing files
+
+commit 23212da8da5bd086a1dbae155b6d8fabdb125699
+Merge: c7c4ae5 fb024c0
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 13 11:32:54 2015 +0200
+
+    Merge pull request #30 from Cyan4973/dev
+    
+    Dev
+
+commit fb024c09e47997e1bb6d496f280a4a0d06edeed3
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Aug 13 10:27:34 2015 +0100
+
+    Added : cmake unofficial
+
+commit 87ef054e66e5a741a781d6dcfeb70c20389f00b0
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 12 18:24:35 2015 +0100
+
+    CPU unaligned load : Better detection for ARM cpus
+
+commit 26772f1d5c338c71984cee4c44717c661880c725
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 12 17:10:16 2015 +0100
+
+    Added : ability to select block size in benchmark mode
+
+commit 1e6a918c00e527a36882619df7c124aeb607a448
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Aug 11 13:51:29 2015 +0100
+
+    Clarified license
+
+commit 05f94bf2e0acdcbeb056d72ad2eb20f4f5d49e45
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Aug 8 00:38:07 2015 +0100
+
+    #28 : minor tweak, to spell types within `xxhash.c` exactly the same way they were defined within `xxhash.h`.
+
+commit 24f017808a3110dafb95015190ee95e6c7571a9d
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Aug 8 00:22:56 2015 +0100
+
+    Added : wildcard support : can checksum multiple files
+
+commit c7c4ae5f7b8c24a40e104b66d57221fb04aec501
+Merge: dcc2ee1 fcc8092
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jun 29 03:18:44 2015 -0700
+
+    Merge pull request #27 from Cyan4973/dev
+    
+    Dev
+
+commit fcc80928a31c954ca348b04b18c47ea103b1103a
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Jun 28 03:40:12 2015 -0800
+
+    travis : force targets to be rebuilt
+
+commit cab86639a580afae40c69daeb8d0f530e793b8da
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Jun 28 03:20:23 2015 -0800
+
+    Added : XXH_NAMESPACE, for namespace emulation in C
+
+commit 962fd0ab4d12c51ce3fdb0bde5c672d56b19d765
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu May 7 15:27:27 2015 +0100
+
+    restored big-endian display
+
+commit 76c90f1d0f0ba096b166efbbdde25b08a47f5009
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu May 7 13:30:27 2015 +0100
+
+    Added : internal benchmark mode
+
+commit 3b63fc28cac451f0179145467e6410d17a926bf7
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue May 5 11:25:28 2015 +0100
+
+    Added -Wcast-qual compilation flag, as suggested by Isaac Turner
+
+commit 049aa14e1545f3b0245e1e71f9cc370dd34cf6c4
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue May 5 01:01:10 2015 +0100
+
+    added more tests
+
+commit 57fda00476d4586bae05f168201afdb933551d3b
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon May 4 22:56:53 2015 +0100
+
+    sync with lz4 version
+
+commit 6091616b30ff3c3c43e84b14956afd320c2a01a5
+Merge: dcc2ee1 a1264ed
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon May 4 23:54:55 2015 +0200
+
+    Merge branch 'dev' of github.com:Cyan4973/xxHash into dev
+
+commit a1264ed45d97100cc7dca84b4cb69a4033473f6a
+Merge: a3f950c c346bb9
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Jan 7 16:13:47 2015 +0100
+
+    Merge pull request #18 from weakish/typo
+    
+    README: typo.
+
+commit c346bb977357506b23cf40cd0ce2f2f09e679451
+Author: Jakukyo Friel <weakish@gmail.com>
+Date:   Wed Jan 7 22:49:06 2015 +0800
+
+    README: typo.
+
+commit a3f950c24c5e9ebdbb582797e53ada05301d7653
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jan 1 17:10:04 2015 +0100
+
+    updated some comments
+
+commit cb1963919959fdb43dd0fd96cad84901c01beeb8
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Dec 17 12:35:18 2014 +0100
+
+    Fixed : minor -pedantic warnings
+
+commit edb6d79f512c9eccf6c33127395cd1312377eb47
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Dec 17 12:15:03 2014 +0100
+
+    xxhash.c is C90 compatible
+
+commit bdbf0a541a315cce0c0d4cefb128a8bb1d847744
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Dec 9 19:16:15 2014 +0100
+
+    minor comment update
+
+commit 86fe903d97b02a92e09ab5313b8e4c5b36eb8e65
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Dec 9 18:42:33 2014 +0100
+
+    xxhsum display result using big-endian convention
+
+commit dcc2ee1bdc4b219ec6ec0ab30e5f74961a7cb079
+Merge: 438baab 7a42b82
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Dec 8 02:38:43 2014 +0100
+
+    Merge pull request #15 from Cyan4973/dev
+    
+    Dev
+
+commit 7a42b82197648d7434c8e75a748f8b435cd4c735
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Nov 23 00:48:56 2014 +0100
+
+    Added : -Wcast-align compilation option
+
+commit d8c04c12079a469d8c42e96d331e37b0e124627f
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Nov 23 00:47:21 2014 +0100
+
+    Fixed : minor alignment warning under clang
+
+commit 438baab7167c1608649a50d2f4136fa0d26933de
+Merge: 5abd4f6 f452e84
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Oct 30 09:59:42 2014 +0100
+
+    Merge pull request #12 from Cyan4973/dev
+    
+    xxhsum : can use stdin as input (default)
+
+commit f452e84660042202e1447af7da4d40f5591a3d8c
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Oct 29 14:02:50 2014 +0100
+
+    Added : stdin test
+
+commit f7f77986f19a94a573590a0e0ec8c3caf48fe5c8
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Oct 29 13:55:58 2014 +0100
+
+    xxhsum : can use stdin as input (default)
+
+commit ef3cc0c80a386682ce45c795e74dbd679fdeee1a
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Oct 29 02:42:26 2014 +0100
+
+    xxhsum : introduces gettimeofday() as a potential replacement for ftime()
+
+commit 56cbabb752599584611fbd7587118cee3ecedc05
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Oct 29 02:05:59 2014 +0100
+
+    Makefile : C compiler selection is OS driven
+
+commit 5abd4f65aaec5acc0bb6776c592ce41523700ae4
+Merge: 19d7494 552a135
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sun Oct 26 12:42:52 2014 +0100
+
+    Merge pull request #10 from Cyan4973/dev
+    
+    xxhsum : redirect result to output, and other messages to stderr
+
+commit 552a135701a2fb7d14f2a6228d50936d49d5f12d
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Oct 23 21:36:23 2014 +0100
+
+    xxhsum : redirect result to output, and other messages to stderr
+
+commit 19d7494bed4a13b99ab46218df40e259234218ae
+Merge: d54caef 9ae604f
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Oct 20 13:51:42 2014 +0200
+
+    Merge pull request #9 from Cyan4973/dev
+    
+    Dev
+
+commit 9ae604f15fcb9ac3da803780ae51b1089e9cad5a
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Oct 18 12:15:13 2014 +0100
+
+    Fix issue 23 : xxhsum output to stdout
+
+commit 0093c7ac0ecef0f91b56c44f674cb087f99eff0d
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Oct 18 12:10:27 2014 +0100
+
+    Fix issue 22 : use XXH_malloc() & XXH_free()
+
+commit f3f6e3301c438efb464b461ecc0db3f543a96c29
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Oct 18 12:03:38 2014 +0100
+
+    tune xxhsum display messages
+
+commit 9e10157ef34924c3979c713d6e4496afe1bbc9a6
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Oct 18 11:46:37 2014 +0100
+
+    renamed bench.c into xxhsum.c
+
+commit d54caef13199c89c885c6fedc5f8e40206bf3cce
+Merge: 3332e5d cc124e4
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Oct 3 12:01:49 2014 +0200
+
+    Merge pull request #8 from Cyan4973/dev
+    
+    Dev
+
+commit cc124e4c3d3e7d02ecac1cd679502c88bde622a7
+Merge: 1cdcb5d ed990f4
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Sep 30 21:34:47 2014 +0200
+
+    Merge pull request #7 from Cyan4973/updatedAPI
+    
+    Updated api
+
+commit ed990f43ebfff81cb5901818c6ede62d3c47d569
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Sat Sep 27 12:41:07 2014 +0100
+
+    _digest uses const* type (doesn't modify state)
+
+commit 5176062578b239366c5332e8ec97d48f37091236
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Sep 25 21:53:18 2014 +0100
+
+    xxh32sum & xxh64sum
+    enabled short latency versions
+
+commit 128a34ccace7e70f04fc17c5c7cfa45f5babdc4b
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Sep 25 21:22:59 2014 +0100
+
+    Moved to xxhsum
+
+commit 2d6da418a065afbb3d69de88f878a1f3e45663a6
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Sep 25 17:30:15 2014 +0100
+
+    new xxHash API (breaking changes)
+
+commit d0d992cc557ed5d3652053b6f0d04d3f20200be3
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Fri Aug 15 11:27:04 2014 +0200
+
+    Fixed crlf issue
+
+commit 3332e5d4342debaa8093154568fc499d05194dc1
+Merge: fa48fc2 1cdcb5d
+Author: Cyan4973 <yann.collet.73@gmail.com>
+Date:   Fri Aug 15 11:06:41 2014 +0200
+
+    Merge pull request #5 from Cyan4973/dev
+    
+    Dev
+
+commit 1cdcb5d10e5796fbc4d8183252e4554f1050d81b
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 13 17:27:38 2014 +0100
+
+    unix-style eol
+
+commit ee3a7931cc531becfbaba7bac9f711d462dbdb35
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 13 16:52:19 2014 +0100
+
+    Clarified branch policy
+
+commit c36e42ce4737d659109b5a865870645d9755e973
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 13 02:26:09 2014 +0100
+
+    Updated comment, to reflect change into XXHnn_init()
+
+commit 962c515f879a5eed23841fffa1d9a80913c34722
+Merge: ccd8a42 f85bfd7
+Author: Cyan4973 <yann.collet.73@gmail.com>
+Date:   Wed Aug 13 03:18:17 2014 +0200
+
+    Merge pull request #4 from sfgagnon/patch-1
+    
+    Memory allocation validation
+
+commit f85bfd7f8d58acbfe8e85f0563df302db1c6da90
+Author: Stephane Gagnon <sfgagnon@users.noreply.github.com>
+Date:   Mon Aug 11 23:29:19 2014 -0400
+
+    Memory allocation validation
+    
+    malloc is used to allocate the state structure, but XXHxx_resetState() uses the allocated buffer without checking if allocation was successful.
+    User can then check for NULL pointer to validate that XXHxx_init was successful without a core dump.
+    
+    thank you.
+
+commit ccd8a4253f986e9d9eb02091e0fbdce731f0b205
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 6 20:34:53 2014 +0100
+
+    Added : .gitattributes
+
+commit d4c6af7ef101dc0ebe13f0121b9f7c79eb826aa2
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 6 20:33:58 2014 +0100
+
+    Added : null length support even for invalid pointers
+    Added : test : null length input on invalid pointers
+
+commit c4de51307f9fc62b5ce5d435f9a5eff48515f67a
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Wed Aug 6 09:11:52 2014 +0100
+
+    minor formatting changes
+
+commit fa48fc2f4a4b7cbe1654947eccd7775df9c69577
+Merge: fb3a75c 59d6f69
+Author: Cyan4973 <yann.collet.73@gmail.com>
+Date:   Sat Jul 19 11:05:20 2014 +0200
+
+    Merge pull request #3 from Cyan4973/dev
+    
+    Dev
+
+commit 59d6f69e791922a288ec50cd687197ce82de9969
+Merge: 7a0ba00 d1886fe
+Author: Cyan4973 <yann.collet.73@gmail.com>
+Date:   Fri Jul 18 10:18:53 2014 +0200
+
+    Merge pull request #2 from t-mat/dev
+    
+    Fix Travis CI URLs
+
+commit d1886fe41efdd7c058c599c972c4026cecdeb3ee
+Author: Takayuki MATSUOKA <takayuki.matsuoka@gmail.com>
+Date:   Thu Jul 17 20:05:37 2014 +0900
+
+    Fix Travis CI URLs
+    
+     - Fix badge image URL
+     - Fix branch status URL
+
+commit fb3a75cfa10e475c6dacc886da1d1435ef800065
+Merge: b22de6c 7a0ba00
+Author: Cyan4973 <yann.collet.73@gmail.com>
+Date:   Wed Jul 16 13:55:36 2014 +0200
+
+    Merge pull request #1 from Cyan4973/dev
+    
+    Dev
+
+commit 7a0ba00df8d77f37f8119b7a1b25dba8ba635491
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Tue Jul 15 18:37:36 2014 +0100
+
+    Makefile : added -Wstrict-prototype
+
+commit 26c55b1ab5e19562a1fe58a2e6597e2c65ab02c2
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jul 14 19:49:45 2014 +0100
+
+    UI : minor : tester indicates 32/64 bits mode
+
+commit 8d9171e95714de9187e7d8c2cd56991dcdc4dddb
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jul 14 19:28:30 2014 +0100
+
+    updated : siphash results
+
+commit e551459538511b74a16cf191d362d61568d47b0e
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Mon Jul 14 16:54:56 2014 +0100
+
+    Fixed : issue 18 (null input pointer)
+    Changed : API : length uses unsigned int
+
+commit f0f007f0424c12997a33d604c01664b30bb248f4
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jul 10 22:44:08 2014 +0200
+
+    Added : Travis automated tests
+    
+    and license
+    and readme
+
+commit 70ba044dedc2ea3f3d73464dbf823978b07f739a
+Author: Yann Collet <yann.collet.73@gmail.com>
+Date:   Thu Jul 10 08:28:57 2014 +0100
+
+    New : XXH64, 64-bits version, thanks to Mathias Westerdahl
+
+commit b22de6c9beba7463144ec8bb23c79a3e99b5feeb
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Sun Mar 9 23:53:42 2014 +0000
+
+    Issue 17 : strict prototype definition for XXH32_sizeofState()
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@34 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 7c14a4041154157018b48aef0acf275d4164c41b
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Thu Dec 5 22:47:05 2013 +0000
+
+    Corrected : aligned input detection on strict-align CPU (issue 15)
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@33 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 6d95829a7b9024f1eaa6d8891209a926283b86a0
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Wed Aug 7 14:34:28 2013 +0000
+
+    Corrected a bug in the compact version of XXH32. Thanks Adrien Grand for detecting it. Update is recommended.
+    Bench.c now also checks results integrity as part of starting sequence.
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@32 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 99a867a14adda6a233f6d8bfb93a735010b88268
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Thu Jul 25 08:40:23 2013 +0000
+
+    Runtime endianess detection
+    removed typecast warnings for 64-bits CPU with aligned-only memory accesses
+    made bench.c compatible with tcc
+    small bench.c optimisation, reducing impact of timer calls
+    
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@31 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 681ea2aad6367279f8b82149de8657e9b17be8d6
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Tue Jun 4 12:01:50 2013 +0000
+
+    Support non-aligned input on strict-align CPU systems, as requested by Gregory Pakosz
+    Type XXH32_stateSpace_t, for static allocation ( typically for stack allocation, or freestanding systems). Suggested by Christoph Cullmann and Takayuki Matsuoka
+    User definable memory-related functions (malloc, free, memcpy)
+    Changed enum OK into XXH_OK
+    Restricted intrinsic _rotl to MSVC, due to poor performance under minGW
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@30 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 107fd8f2a60611afd641aa4b53521ac042e533ec
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Thu May 16 07:07:10 2013 +0000
+
+    Corrected : compatibility with older GCC versions, reported by Vasiliy Ermolovich.
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@29 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 56314ee122e435fe9267e358fde7f74c64ca2f59
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Sat May 11 11:22:55 2013 +0000
+
+    New functions XXH32_sizeofState() and XXH32_resetState(), for external allocation. Thanks to Takayuki Matsuoka for suggestion.
+    Slightly improved speed of XXH32_update()
+    New mode XXH_ACCEPT_NULL_INPUT_POINTER (as a #define), suggested by Brian White and Thomas Kaiser.
+    Added : Makefile, for GCC
+    Modified Basic Types and C99 detection.
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@28 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 70e65c925a03b63d4e84e67cf22b34f36fcdb3c8
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Wed Apr 17 23:15:37 2013 +0000
+
+    re-enabled fast version of XXH32()
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@11 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit ca59c9d11fc466790533030630806d33e29263bd
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Fri Apr 12 08:24:54 2013 +0000
+
+    Modified function names
+    Added null-pointer check to update()
+    Removed a few warnings
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@7 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit e3fca4f187350cc88816ed354aec7129544fb65b
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Tue Dec 18 16:57:42 2012 +0000
+
+    Corrected : issue with providing a wrong hash for input of size between 4GB+1 et 4GB+15 bytes
+    Corrected : macro to define hardware 32-bits swap with GCC
+    Thanks to Adrien Grand for both issues raised.
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@6 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit ad2c867c873b5f0d060165cbdc1eb2aaddca73f4
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Fri Dec 14 23:00:21 2012 +0000
+
+    - Added : Endian-independant result
+    - Added : Get intermediate hashes
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@5 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit d6a6bd9e7289121c7bb858938d014508514efda6
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Wed Dec 12 19:06:11 2012 +0000
+
+    New version
+    Added : capability to provide input in several consecutive blocks
+    Single version provided : XXH32() (Speed 5.4 GB/s), with a Q.Score of 10
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@4 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit db3c9f7f3bfc6dcccde41a8994f09a081365f4f9
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Thu May 10 01:22:58 2012 +0000
+
+    Added : benchmark program, for easier evaluation
+    Corrected : _rotl() support limited to Windows; replaced with software-defined for other targets
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@3 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit ab856b12b872edc56a26871534fcba4a841579d9
+Author: yann.collet.73@gmail.com <yann.collet.73@gmail.com@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Mon Apr 30 15:49:54 2012 +0000
+
+    initial release
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@2 a90a0800-428d-89a3-ac20-94765a7798ee
+
+commit 8a09add47b4bd3ba92cfb8f801c6dfad7183286b
+Author: (no author) <(no author)@a90a0800-428d-89a3-ac20-94765a7798ee>
+Date:   Thu Apr 12 21:20:40 2012 +0000
+
+    Initial directory structure.
+    
+    git-svn-id: https://xxhash.googlecode.com/svn/trunk@1 a90a0800-428d-89a3-ac20-94765a7798ee
