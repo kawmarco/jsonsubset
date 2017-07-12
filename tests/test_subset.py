@@ -26,6 +26,8 @@ def test_predefined_cases(gen_expr):
         test_case_bytes = json.dumps(test_case).encode("utf-8")
 
         for expr in gen_expr(test_case):
+            print("TEST_CASE", test_case),
+            print("EXPR", expr)
             reference = tests.reference_implementation.subset(expr, test_case_bytes)
             actual = subset.JsonSubset(expr).parse(test_case_bytes)
 
