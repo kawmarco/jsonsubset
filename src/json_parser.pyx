@@ -1,6 +1,12 @@
+from subset_expression cimport Expression
 
-cdef inline object parse(bytes json_bytes, object expr, int expr_len):
-    cdef Parser parser = Parser(json_bytes, expr, expr_len)
+cdef Expression EMPTY_EXPRESSION = Expression()
+EMPTY_EXPRESSION.is_leaf=0
+
+cdef object parse(bytes json_bytes, Expression* cexpr, int expr_len):
+    cdef Parser parser = Parser(json_bytes)
+    parser.init_cexpr(cexpr, expr_len)
+
     return parser.parse()
 
 cdef class Parser:
@@ -19,28 +25,32 @@ cdef class Parser:
 
     cdef int num_parsed
     cdef int expr_len
-    cdef object expr
+    cdef Expression* cexpr
     cdef char last
 
-    def __cinit__(self, bytes json_bytes_python, expr, int expr_len):
+    def __cinit__(self, bytes json_bytes_python):
         self.json_bytes_python = json_bytes_python
         self.json_bytes = self.i = json_bytes_python
         self.json_bytes_len = len(json_bytes_python)
-        self.expr = expr
 
         # optimisation: if num_parsed == expr_len (i.e. if we already parsed
         # all statements set as True in the expression), we can stop parsing
         self.num_parsed = 0
+
+
+    cdef init_cexpr(self, Expression* cexpr, int expr_len):
+        self.cexpr = cexpr
         self.expr_len = expr_len
 
-    cpdef object parse(self):
-        return self._parse(self.expr)
 
-    cdef object _parse(self, object expr):
+    cpdef object parse(self):
+        return self._parse(self.cexpr)
+
+    cdef object _parse(self, Expression* cexpr, int forced=0):
         cdef char c = self.consume()
 
         if c == b'{':
-            value = self._parse_obj(expr)
+            value = self._parse_obj(cexpr, forced)
 
         elif c == b'"':
             value = self._parse_str()
@@ -61,21 +71,24 @@ cdef class Parser:
             # bug (or invalid json)
             assert False, (chr(self.last), self.json_bytes, self.i-self.json_bytes, len(self.json_bytes), chr(self.i[0]))
 
-        if expr is True:
+        #if expr is True:
+        if cexpr.is_leaf:
             self.num_parsed += 1
             return value.get()
 
-        elif expr is not False:
+        #elif expr is not False:
+        elif cexpr is not &EMPTY_EXPRESSION or forced:
             return value.get()
 
         self.last = c
 
-    cdef ObjectValue _parse_obj(self, expr):
+    cdef ObjectValue _parse_obj(self, Expression* cexpr, int forced=0):
         cdef ObjectValue ret = ObjectValue()
         ret.start = self.i
         self.i += 1
 
-        if expr is not False:
+        #if expr is not False:
+        if cexpr.is_leaf or cexpr is not &EMPTY_EXPRESSION or True:
             ret.obj = {}
 
         cdef StringValue key
@@ -91,17 +104,19 @@ cdef class Parser:
             self.consume() # consume ':'
             self.i += 1
 
-            if expr is True or expr is 1:
+            #if expr is True or expr is 1:
+            if cexpr.is_leaf or forced:
                 key_str = key.get()
                 # using 1 instead of True to avoid self.num_parsed increment
-                ret.obj[key_str] = self._parse(1)
+                ret.obj[key_str] = self._parse(&EMPTY_EXPRESSION, forced=1)
 
-            elif (expr is False) or (key_hash not in expr):
-                self._parse(False)
+            #elif (expr is False) or (key_hash not in expr):
+            elif cexpr is &EMPTY_EXPRESSION or cexpr.children.count(key_hash) == 0:
+                self._parse(&EMPTY_EXPRESSION, forced=0)
 
             else:
                 key_str = key.get()
-                ret.obj[key_str] = self._parse(expr[key_hash])
+                ret.obj[key_str] = self._parse(cexpr.children[0][key_hash], forced)
 
             self.i += 1
 
@@ -137,7 +152,7 @@ cdef class Parser:
         self.i += 1
 
         while self.consume() != b']' and self.num_parsed < self.expr_len:
-            self._parse(False)
+            self._parse(&EMPTY_EXPRESSION)
             self.i += 1
 
             if self.consume() == b',':

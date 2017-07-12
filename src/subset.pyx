@@ -1,16 +1,19 @@
 import json
-cimport json_parser
 import xxhash
 
+cimport json_parser
+cimport subset_expression
+
 cdef class JsonSubset:
-    cdef object compiled_expr
+    cdef subset_expression.Expression * compiled_expr
     cdef int expr_len
 
     def __init__(self, expr):
-        self.compiled_expr = self._compile(expr)
+        self.compiled_expr = subset_expression.compile(expr)
+        #self.compiled_expr = self._compile(expr)
         self.expr_len = self._expr_len(expr)
 
-    cpdef parse(self, bytes json_bytes):
+    def parse(self, bytes json_bytes):
         return json_parser.parse(
             json_bytes, 
             self.compiled_expr,
@@ -30,11 +33,10 @@ cdef class JsonSubset:
 
         raise ValueError("JsonSubset expression must be composed only of dicts and True, got " + repr(expr))
 
-    @classmethod
-    def _expr_len(cls, expr):
+    def _expr_len(self, expr):
         if expr == True:
             return 1
 
         return sum(
-            cls._expr_len(v) for v in expr.values()
+            self._expr_len(v) for v in expr.values()
         )
