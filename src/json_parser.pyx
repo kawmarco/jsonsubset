@@ -8,6 +8,7 @@ cdef class Parser:
 
     """
     cdef char* json_bytes
+    cdef char* json_bytes_end
     cdef int json_bytes_len
 
     # this is needed to hold reference to the original byte string
@@ -19,12 +20,12 @@ cdef class Parser:
     cdef int num_parsed
     cdef int expr_len
     cdef object expr
-    cdef char last
 
     def __cinit__(self, bytes json_bytes_python, expr, int expr_len):
         self.json_bytes_python = json_bytes_python
         self.json_bytes = self.i = json_bytes_python
         self.json_bytes_len = len(json_bytes_python)
+        self.json_bytes_end = self.json_bytes + self.json_bytes_len
         self.expr = expr
 
         # optimisation: if num_parsed == expr_len (i.e. if we already parsed
@@ -57,8 +58,7 @@ cdef class Parser:
             value = self._parse_null()
 
         else:
-            # bug (or invalid json)
-            assert False, (chr(self.last), self.json_bytes, self.i-self.json_bytes, len(self.json_bytes), chr(self.i[0]))
+            self.raise_invalid_json()
 
         if expr is True:
             self.num_parsed += 1
@@ -67,7 +67,8 @@ cdef class Parser:
         elif expr is not False:
             return value.get()
 
-        self.last = c
+    cpdef raise_invalid_json(self):
+        raise ValueError("Invalid JSON string at pos {}: {}".format(self.i - self.json_bytes, repr(self.json_bytes_python)))
 
     cdef ObjectValue _parse_obj(self, expr):
         cdef ObjectValue ret = ObjectValue()
@@ -118,13 +119,16 @@ cdef class Parser:
         ret.start = self.i
         self.i += 1
 
-        while self.i[0] != b'"':
+        while self.i[0] not in (b'"', b'\x00'):
             if self.i[0] == b'\\': #escaped char
                 ret.safe = 0
                 self.i += 2
 
             else:
                 self.i += 1
+
+        if self.i >= self.json_bytes_end:
+            self.raise_invalid_json()
 
         ret.end = self.i
 
@@ -153,6 +157,11 @@ cdef class Parser:
             self.i += 1
 
         ret.end = self.i
+
+        if ret.start[0] == b'0' and ret.end - ret.start >= 1 and ret.start[1] != b'.':
+            # numbers with len > 1 cannot start with "0"
+            self.raise_invalid_json()
+
         return ret
 
     cdef NullValue _parse_null(self):
@@ -160,6 +169,9 @@ cdef class Parser:
         ret.start = self.i
 
         self.i += 3 # == len("null") - 1
+        
+        if self.i >= self.json_bytes_end:
+            self.raise_invalid_json()
 
         ret.end = self.i
         return ret
@@ -183,6 +195,9 @@ cdef class Parser:
             self.i += 1
 
         return self.i[0]
+
+    def consistent(self):
+        return self.i <= self.json_bytes_end
 
 ## json parser values ##
 

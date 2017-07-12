@@ -1,0 +1,82 @@
+import pytest
+import json
+import random
+
+from hypothesis import given
+from tests.hypothesis_strategies import JSON_FULL
+
+import json_parser
+
+TEST_CASES = [
+    '',
+    ',',
+    ':',
+    '[',
+    '[1',
+    '[1,',
+    '[1,]',
+    '[}',
+    '[t'
+
+    '{',
+    '{"',
+    '{"1',
+    '{"1"',
+    '{"1":',
+    '{"1":2',
+    '{"1":2,',
+
+    't',
+    'f',
+
+    'n',
+
+    '"',
+    '"\\',
+    '":',
+
+    'I',
+    '01',
+    '000000.1',
+
+    'a',
+    'á',
+]
+
+
+def test_invalid_meta():
+    # assert that json.loads() can't parse invalid test cases(otherwise it's a valid json)
+    for test_case_str in TEST_CASES:
+        with pytest.raises(ValueError):
+            json.loads(test_case_str)
+
+
+def test_invalid_input():
+    for test_case_str in TEST_CASES:
+        parser = json_parser.Parser(test_case_str.encode("utf-8"), True, 1)
+        with pytest.raises(ValueError):
+            parser.parse()
+            assert parser.consistent()
+
+@given(JSON_FULL)
+def test_invalid_input_random_corruption(test_case):
+    json_chars = list(json.dumps(test_case))
+
+    while True:
+        try:
+            test_case_str = "".join(json_chars)
+            json.loads(test_case_str)
+            json_chars[random.randint(0, len(json_chars)-1)] = chr(random.randint(0,128))
+
+        except ValueError:
+            break
+
+    # XXX Ideally, it should follow json.loads() with value error if there's an error.
+    # for now, though, we are happy if it doesn't segfault
+    try:
+        parser = json_parser.Parser(test_case_str.encode("utf-8"), True, 1)
+        parser.parse()
+        assert parser.consistent()
+
+    except ValueError:
+        pass
