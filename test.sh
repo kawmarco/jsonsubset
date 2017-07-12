@@ -1,5 +1,5 @@
 cd $(dirname $0)
 source venv/bin/activate
 
-export PYTHONPATH=src:.
+export PYTHONPATH=src:deps/xxhash_cython:.
 py.test tests "$@"
