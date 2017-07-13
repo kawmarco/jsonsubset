@@ -68,7 +68,10 @@ cdef class Parser:
             return value.get()
 
     cpdef raise_invalid_json(self):
-        raise ValueError("Invalid JSON string at pos {}: {}".format(self.i - self.json_bytes, repr(self.json_bytes_python)))
+        exp = ValueError("Invalid JSON string at pos {}: {}".format(self.i - self.json_bytes, repr(self.json_bytes_python)))
+        self.i = self.json_bytes_end
+        raise exp
+
 
     cdef ObjectValue _parse_obj(self, expr):
         cdef ObjectValue ret = ObjectValue()
@@ -185,6 +188,9 @@ cdef class Parser:
 
         elif self.i[0] == b'f':
             self.i += 4 # == len("false") - 1
+
+        if self.i >= self.json_bytes_end:
+            self.raise_invalid_json()
 
         ret.end = self.i
         return ret
