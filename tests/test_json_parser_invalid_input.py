@@ -112,3 +112,23 @@ def test_invalid_input_non_json(s):
 
     assert parser.consistent()
 
+@given(text(alphabet='{}[]\\tfIN01n:",-'))
+def test_invalid_input_non_json_token_fuzzying(s):
+    try:
+        json.loads(s)
+        # valid json, skip test
+        return
+    
+    except:
+        pass
+
+    # XXX Ideally, it should follow json.loads() with value error if there's an error.
+    # for now, though, we are happy if it doesn't overflow the string buffer or segfaults
+    parser = json_parser.Parser(s.encode("utf-8"), True, 1)
+    try:
+        parser.parse()
+    
+    except ValueError:
+        pass
+
+    assert parser.consistent()

@@ -91,7 +91,9 @@ cdef class Parser:
 
             self.i += 1
 
-            self.consume() # consume ':'
+            if self.consume() != b':':
+                self.raise_invalid_json()
+
             self.i += 1
 
             if expr is True or expr is 1:
