@@ -42,7 +42,7 @@ extensions = [
 
 setup(
     name='jsonsubset',
-    version='0.1.0',
+    version='0.1.1',
     url='https://github.com/kawmarco/jsonsubset',
     description="Extract and parse specific fields from a JSON string ",
     author="Marco Kawajiri",
