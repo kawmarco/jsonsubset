@@ -2,3 +2,7 @@
 venv
 __pycache__
 .hypothesis
+dist/
+build/
+.eggs/
+UNKNOWN.egg-info
