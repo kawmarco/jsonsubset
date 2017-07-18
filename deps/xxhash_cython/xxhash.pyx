@@ -1,4 +1,4 @@
-cdef extern from "xxHash/xxhash.h":
+cdef extern from "xxhash.h":
     unsigned long long XXH64 (void* input, size_t length, unsigned long long seed)
 
 cdef unsigned long long hash64(void* s, size_t s_len):

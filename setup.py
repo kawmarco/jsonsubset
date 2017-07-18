@@ -23,6 +23,7 @@ extensions = [
             'jsonsubset/deps/xxhash_cython/xxhash.pyx',
             'jsonsubset/deps/xxhash_cython/xxHash/xxhash.c'
         ],
+        include_dirs = ["jsonsubset/deps/xxhash_cython/xxHash"],
         extra_compile_args=["-O3"]
     ),
     Extension(
@@ -42,9 +43,14 @@ extensions = [
 setup(
     name='jsonsubset',
     version='0.1.0',
+    url='https://github.com/kawmarco/jsonsubset',
     description="Extract and parse specific fields from a JSON string ",
     author="Marco Kawajiri",
-    keywords='jsonsubset',
+    keywords=[
+        'jsonsubset',
+        'json',
+        'select',
+    ],
     license="MIT license",
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -59,11 +65,18 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
 
-    packages=["jsonsubset"],
+    packages=[
+        "jsonsubset",
+        "jsonsubset.deps.xxhash_cython",
+    ],
     package_data={
+        'jsonsubset': ['*.pxd'],
+        "jsonsubset.deps.xxhash_cython": ['*.pxd'],
     },
     package_dir={
-        'jsonsubset': 'jsonsubset'
+        'jsonsubset': 'jsonsubset',
+        'jsonsubset.deps.xxhash_cython': 'jsonsubset/deps/xxhash_cython',
+
     },
     ext_modules=extensions,
     setup_requires=setup_requires,
