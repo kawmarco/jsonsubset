@@ -1,5 +1,5 @@
 from setuptools import setup
-from distutils.extension import Extension
+from setuptools.extension import Extension
 
 setup_requires = [
     'cython>=0.x',
@@ -11,9 +11,9 @@ install_requires = [
 ]
 
 tests_require = [
-    'pytest',
-    'pytest-benchmark',
     'hypothesis',
+    'pytest-benchmark',
+    'pytest',
 ]
 
 extensions = [
@@ -40,9 +40,27 @@ extensions = [
 ]
 
 setup(
+    name='jsonsubset',
+    version='0.1.0',
+    description="Extract and parse specific fields from a JSON string ",
+    author="Marco Kawajiri",
+    keywords='jsonsubset',
+    license="MIT license",
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Programming Language :: Cython',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+    ],
+
     packages=["jsonsubset"],
     package_data={
-        "jsonsubset.deps.xxhash_cython.xxhash": ["jsonsubset/deps/xxhash_cython/xxhash.pxd"],
     },
     package_dir={
         'jsonsubset': 'jsonsubset'
