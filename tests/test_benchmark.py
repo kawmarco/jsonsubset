@@ -2,7 +2,7 @@ import pytest
 import hashlib
 
 import ujson
-import subset
+from jsonsubset import subset
 
 SAMPLE_SIZE = 500
 

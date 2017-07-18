@@ -212,7 +212,7 @@ cdef class Parser:
 import json
 import ujson
 
-cimport xxhash
+cimport jsonsubset.deps.xxhash_cython.xxhash as xxhash
 
 cdef class Value:
     """

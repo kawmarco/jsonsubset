@@ -1,5 +1,5 @@
 import json
-import xxhash
+import jsonsubset.deps.xxhash_cython.xxhash as xxhash
 
 cimport json_parser
 

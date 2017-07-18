@@ -1,0 +1,3 @@
+include jsonsubset/deps/xxhash_cython/xxHash/*.h
+include jsonsubset/deps/__init__.py
+

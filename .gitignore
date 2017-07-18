@@ -2,3 +2,10 @@
 venv
 __pycache__
 .hypothesis
+dist/
+build/
+.eggs/
+*.egg-info
+*.c
+*.cpp
+*.so

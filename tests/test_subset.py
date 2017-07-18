@@ -1,7 +1,7 @@
 import json
 from fixtures import gen_expr
 import tests.reference_implementation
-import subset
+from jsonsubset import subset
 
 from hypothesis import given
 from tests.hypothesis_strategies import JSON_FULL_LITE

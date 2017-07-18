@@ -9,7 +9,7 @@ from hypothesis.strategies import booleans, dictionaries
 from tests.hypothesis_strategies import JSON_LIST
 from tests.hypothesis_strategies import JSON_FULL
 
-import json_parser
+from jsonsubset import json_parser
 
 def test_init():
     parser = json_parser.Parser(b'{}', True, 1)
