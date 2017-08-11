@@ -29,7 +29,7 @@ raw_json_object = b"""
 }
 """
 ```
-To compile a parser that will only extract the `id` and `partnumber` fields, use `jsonsubset.compile` to compile an [expression](#Writing-jsonsubset-expressions):
+To compile a parser that will only extract the `id` and `partnumber` fields, use `jsonsubset.compile` to compile an [expression](#writing-jsonsubset-expressions):
 ```
 import jsonsubset
 
