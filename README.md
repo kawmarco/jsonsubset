@@ -4,7 +4,7 @@ jsonsubset is a [cython](http://cython.org/)-based JSON parser that is optimised
 
 Its main use case is to extract a small number of fields out of a large JSON object.
 
-If you have a large amount of raw JSON objects and is only interested in certain parts of it, jsonsubset may be able to do it more efficiently than traditional JSON parsers (like `ujson`) :-]
+If you have a large amount of raw JSON objects and is only interested in parsing only certain parts of it, jsonsubset may be able to do it more efficiently than traditional JSON parsers (like `ujson`) :-]
 
 # Installation
 Using pip:
@@ -42,6 +42,55 @@ Then, use the `.parse()` method to parse and extract only selected fields:
 ```
 parsed_object = jsub_parser.parse(unparsed_json_object)
 # parsed_object = {'id': 'this_is_an_id', 'partnumber': 1234567}
+```
+
+# Writing jsonsubset expressions
+jsonsubset expressions (i.e. the ones accepted by `jsonsubset.compile()`) can be recursively defined by:
+```
+EXPR = True | DICT_EXPR
+DICT_EXPR = { KEY_STRING : EXPR }
+KEY_STRING = <string containing a valid JSON object key>
+```
+
+The simplest jsonsubset expression is simply `True`, which parses the entire JSON:
+```
+jsub_parser = jsonsubset.compile(True)
+
+print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
+# prints {'a': 'valid', 'json': {'object': 'string'}}
+```
+
+To parse only specific fields from a JSON object, simply define a dictionary with the desired keys and set the corresponding values as `True`:
+```
+jsub_parser = jsonsubset.compile({
+    "a": True
+})
+
+print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
+# prints {'a': 'valid'}
+```
+
+You can nest expressions as well:
+```
+jsub_parser = jsonsubset.compile({
+    "a": {
+        "b": {
+            "c": True
+        }
+    }
+})
+
+print(jsub_parser.parse(b'{"a": {"b": {"c": 1234, "something": "else"}, "look_a_boolean": true}}'))
+# prints jsub_parser = jsonsubset.compile({
+    "a": {
+        "b": {
+            "c": True
+        }
+    }
+})
+
+print(jsub_parser.parse(b'{"a": {"b": {"c": 1234, "something": "else"}, "look_a_boolean": true}}'))
+# prints {'a': {'b': {'c': 1234}}}
 ```
 
 # Benchmarks
