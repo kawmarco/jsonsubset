@@ -40,8 +40,8 @@ jsub_parser = jsonsubset.compile({
 ```
 Then, use the `.parse()` method to parse and extract only selected fields:
 ```
-parsed_object = jsub_parser.parse(unparsed_json_object)
-# parsed_object = {'id': 'this_is_an_id', 'partnumber': 1234567}
+parsed = jsub_parser.parse(unparsed_json_object)
+# parsed = {'id': 'this_is_an_id', 'partnumber': 1234567}
 ```
 
 # Writing jsonsubset expressions
@@ -58,8 +58,8 @@ expression = True
 
 jsub_parser = jsonsubset.compile(expression)
 
-print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
-# prints {'a': 'valid', 'json': {'object': 'string'}}
+parsed = jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}')
+# parsed = {'a': 'valid', 'json': {'object': 'string'}}
 ```
 
 To parse only specific fields from a JSON object, simply define a dictionary with the desired keys and set the corresponding values as `True`:
@@ -70,8 +70,8 @@ expression = {
 
 jsub_parser = jsonsubset.compile(expression)
 
-print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
-# prints {'a': 'valid'}
+parsed = jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}')
+# parsed = {'a': 'valid'}
 ```
 
 You can nest expressions as well:
@@ -86,17 +86,8 @@ expression = {
 
 jsub_parser = jsonsubset.compile(expression)
 
-print(jsub_parser.parse(b'{"a": {"b": {"c": 1234, "something": "else"}, "look_a_boolean": true}}'))
-# prints jsub_parser = jsonsubset.compile({
-    "a": {
-        "b": {
-            "c": True
-        }
-    }
-})
-
-print(jsub_parser.parse(b'{"a": {"b": {"c": 1234, "something": "else"}, "look_a_boolean": true}}'))
-# prints {'a': {'b': {'c': 1234}}}
+parsed = jsub_parser.parse(b'{"a": {"b": {"c": 1234, "something": "else"}, "look_a_boolean": true}}')
+# parsed = {'a': {'b': {'c': 1234}}}
 ```
 
 # Benchmarks
