@@ -4,7 +4,7 @@ jsonsubset is a [cython](http://cython.org/)-based JSON parser that is optimised
 
 Its main use case is to extract a small number of fields out of a large JSON object.
 
-If you have a large amount of raw JSON objects and is only interested in parsing only certain parts of it, jsonsubset may be able to do it more efficiently than traditional JSON parsers (like `ujson`) :-]
+If you have a large amount of raw JSON objects and you need to extract only certain parts of it, jsonsubset may be able to do it more efficiently than traditional JSON parsers (like `ujson`) :-]
 
 # Installation
 Using pip:
@@ -29,7 +29,7 @@ raw_json_object = b"""
 }
 """
 ```
-To compile a parser that will only extract the `id` and `partnumber` fields, use `jsonsubset.compile`:
+To compile a parser that will only extract the `id` and `partnumber` fields, use `jsonsubset.compile` to compile an [expression](#Writing-jsonsubset-expressions):
 ```
 import jsonsubset
 
@@ -54,7 +54,9 @@ KEY_STRING = <string containing a valid JSON object key>
 
 The simplest jsonsubset expression is simply `True`, which parses the entire JSON:
 ```
-jsub_parser = jsonsubset.compile(True)
+expression = True
+
+jsub_parser = jsonsubset.compile(expression)
 
 print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
 # prints {'a': 'valid', 'json': {'object': 'string'}}
@@ -62,9 +64,11 @@ print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
 
 To parse only specific fields from a JSON object, simply define a dictionary with the desired keys and set the corresponding values as `True`:
 ```
-jsub_parser = jsonsubset.compile({
+expression = {
     "a": True
-})
+}
+
+jsub_parser = jsonsubset.compile(expression)
 
 print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
 # prints {'a': 'valid'}
@@ -72,13 +76,15 @@ print(jsub_parser.parse(b'{"a": "valid", "json": { "object": "string" }}'))
 
 You can nest expressions as well:
 ```
-jsub_parser = jsonsubset.compile({
+expression = {
     "a": {
         "b": {
             "c": True
         }
     }
-})
+}
+
+jsub_parser = jsonsubset.compile(expression)
 
 print(jsub_parser.parse(b'{"a": {"b": {"c": 1234, "something": "else"}, "look_a_boolean": true}}'))
 # prints jsub_parser = jsonsubset.compile({
