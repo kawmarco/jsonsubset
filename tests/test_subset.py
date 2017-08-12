@@ -40,3 +40,15 @@ def test_random_cases(gen_expr, test_case):
         actual = subset.JsonSubset(expr).parse(test_case_bytes)
 
         assert reference == actual
+
+@given(JSON_FULL_LITE)
+def test_random_cases_formatted(gen_expr, test_case):
+    test_case_bytes = (
+        "\n" + json.dumps(test_case, indent=4) + "\n"
+    ).encode("utf-8")
+
+    for expr in gen_expr(test_case):
+        reference = tests.reference_implementation.subset(expr, test_case_bytes)
+        actual = subset.JsonSubset(expr).parse(test_case_bytes)
+
+        assert reference == actual
