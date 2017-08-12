@@ -1,3 +1,4 @@
+[![CircleCI](https://circleci.com/gh/kawmarco/jsonsubset.svg?style=svg)](https://circleci.com/gh/kawmarco/jsonsubset)
 # jsonsubset
 
 jsonsubset is a [cython](http://cython.org/)-based JSON parser that is optimised to parse and extract only selected parts of a JSON string.
