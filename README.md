@@ -1,5 +1,6 @@
-[![CircleCI](https://circleci.com/gh/kawmarco/jsonsubset.svg?style=svg)](https://circleci.com/gh/kawmarco/jsonsubset)
 # jsonsubset
+
+[![CircleCI](https://circleci.com/gh/kawmarco/jsonsubset.svg?style=svg)](https://circleci.com/gh/kawmarco/jsonsubset)
 
 jsonsubset is a [cython](http://cython.org/)-based JSON parser that is optimised to parse and extract only selected parts of a JSON string.
 
@@ -113,6 +114,13 @@ For example, a worst-case scenario would be trying to extract a key that doesn't
 Currently, there are also some inefficiencies for parsing certain JSON types (i.e. it's always a good idea to benchmark first. If you find yourself parsing small JSON objects or is extracting most fields from the JSON, `ujson` might be a better bet).
 
 In any case, speed improvements are planned for later versions of jsonsubset :-]
+
+## Is it well tested on invalid/corrupt JSON strings?
+Glad you asked! :smile: 
+
+While there are some relevant test cases for handling invalid input (i.e. correctly raising `ValueError` on invalid input), we recommend that you use jsonsubset on strings that are known to be valid JSON, as invalid input cases are not currently the focus of this project (and, hence, not so thoroughly tested).
+
+If you find that jsonsubset is not raising `ValueError` on an input that should, please feel free to [open an issue](https://github.com/kawmarco/jsonsubset/issues).
 
 # Licence
 jsonsubset is free software available under the [MIT licence](https://github.com/kawmarco/jsonsubset/blob/master/LICENSE).
