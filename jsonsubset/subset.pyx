@@ -11,7 +11,10 @@ cdef class JsonSubset:
         self.compiled_expr = self._compile(expr)
         self.expr_len = self._expr_len(expr)
 
-    def parse(self, bytes json_bytes):
+    def parse(self, json_bytes):
+        if type(json_bytes) == str:
+            json_bytes = json_bytes.encode("utf-8")
+            
         return json_parser.parse(
             json_bytes, 
             self.compiled_expr,

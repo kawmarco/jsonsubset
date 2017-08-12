@@ -52,3 +52,13 @@ def test_random_cases_formatted(gen_expr, test_case):
         actual = subset.JsonSubset(expr).parse(test_case_bytes)
 
         assert reference == actual
+
+def test_json_string():
+    # MUST accept strings (not just bytes) as arguments
+    expr = True
+    parser = subset.JsonSubset(expr)
+
+    for test_case in TEST_CASES:
+        json_str = json.dumps(test_case)
+
+        assert parser.parse(json_str) == test_case
