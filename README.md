@@ -45,13 +45,6 @@ parsed = jsub_parser.parse(unparsed_json_object)
 ```
 
 # Writing jsonsubset expressions
-jsonsubset expressions (i.e. the ones accepted by `jsonsubset.compile()`) can be recursively defined by:
-```
-EXPR = True | DICT_EXPR
-DICT_EXPR = { KEY_STRING : EXPR }
-KEY_STRING = <string containing a valid JSON object key>
-```
-
 The simplest jsonsubset expression is simply `True`, which parses the entire JSON:
 ```
 expression = True
@@ -88,6 +81,13 @@ jsub_parser = jsonsubset.compile(expression)
 
 parsed = jsub_parser.parse(b'{"a": {"b": {"c": 1234, "something": "else"}, "look_a_boolean": true}}')
 # parsed = {'a': {'b': {'c': 1234}}}
+```
+
+jsonsubset expressions (i.e. the ones accepted by `jsonsubset.compile()`) can be recursively defined by:
+```
+EXPR = True | DICT_EXPR
+DICT_EXPR = { KEY_STRING : EXPR }
+KEY_STRING = <string containing a valid JSON object key>
 ```
 
 # Benchmarks
