@@ -114,3 +114,4 @@ Currently, there are also some inefficiencies for parsing certain JSON types (i.
 In any case, speed improvements are planned for later versions of jsonsubset :-]
 
 # Licence
+jsonsubset is free software available under the [MIT licence](https://github.com/kawmarco/jsonsubset/blob/master/LICENSE).
