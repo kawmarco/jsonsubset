@@ -86,6 +86,9 @@ cdef class Parser:
         cdef str key_str
 
         while (self.consume() != b'}') and (self.num_parsed < self.expr_len):
+            if self.consume() != b'"': # keys MUST necessarily be strings
+                self.raise_invalid_json()
+
             key = self._parse_str()
             key_hash = key.hash()
 
@@ -109,10 +112,8 @@ cdef class Parser:
                 ret.obj[key_str] = self._parse(expr[key_hash])
 
             self.i += 1
-
             if self.consume() == b',':
                 self.i += 1
-
 
         ret.end = self.i
         return ret

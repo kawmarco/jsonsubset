@@ -1,4 +1,5 @@
 import json
+import pytest
 from fixtures import gen_expr
 import tests.reference_implementation
 from jsonsubset import subset
@@ -62,3 +63,12 @@ def test_json_string():
         json_str = json.dumps(test_case)
 
         assert parser.parse(json_str) == test_case
+
+def test_incomplete_string():
+    expr = {"a": True}
+    parser = subset.JsonSubset(expr)
+
+    invalid_json_str = '{"a": {"b": {"a": "value}, "something": "else"}}'
+
+    with pytest.raises(ValueError):
+        parser.parse(invalid_json_str)
