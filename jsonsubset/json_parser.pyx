@@ -158,7 +158,7 @@ cdef class Parser:
         cdef NumberValue ret = NumberValue()
         ret.start = self.i
 
-        while (self.i[1] not in b' ,\x00}]'):
+        while (self.i[1] not in b' \n,\x00}]'):
             self.i += 1
 
         ret.end = self.i
@@ -199,7 +199,7 @@ cdef class Parser:
 
     cdef char consume(self):
         # just get next non-space character
-        while self.i[0] == b' ':
+        while self.i[0] in (b' ', b'\n'):
             self.i += 1
 
         return self.i[0]
