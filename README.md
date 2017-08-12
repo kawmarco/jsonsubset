@@ -4,7 +4,7 @@ jsonsubset is a [cython](http://cython.org/)-based JSON parser that is optimised
 
 Its main use case is to extract a small number of fields out of a large JSON object.
 
-If you have a large amount of raw JSON objects and you need to extract only certain parts of it, jsonsubset may be able to do it more efficiently than traditional JSON parsers (like `ujson`) :-]
+If you have a large amount of raw JSON objects and you need to extract only certain parts of it, jsonsubset may be able to do it more efficiently than traditional JSON parsers (like `ujson`).
 
 # Installation
 Using pip:
@@ -92,5 +92,27 @@ KEY_STRING = <string containing a valid JSON object key>
 
 # Benchmarks
 TODO
+
+# FAQ
+## Why is it faster than parsing the whole JSON?
+jsonsubset will attempt to parse only the fields selected in a [expression](#writing-jsonsubset-expressions). 
+
+This means that, once all fields declared in the expression are found and parsed, jsonsubset will return early and ignore the rest of the JSON string.
+
+A best case scenario for jsonsubset would be if all fields that are defined in the expression are at the beginning of the JSON string, e.g. given the expression `{'a': True}`:
+```
+{"a": "something_interesting", "b": "dont_care", "c": 123456}
+                             ^jsonsubset will stop parsing at this 
+                              point and return {'a': 'something_interesting'}
+```
+
+## Why is it slower than parsing the whole JSON?
+If you find that jsonsubset is slower than, say, `ujson` (which is pretty fast, and used internally by jsonsubset), it may be that your JSON is already pretty small, or your particular use case is hitting a rather slow path in jsonsubset.
+
+For example, a worst-case scenario would be trying to extract a key that doesn't exist in the raw JSON. In this case, jsonsubset will parse the whole object (trying to find the key set in the expression) instead of returning early.
+
+Currently, there are also some inefficiencies for parsing certain JSON types. 
+
+In any case, speed improvements are planned for later versions of jsonsubset :-]
 
 # Licence
