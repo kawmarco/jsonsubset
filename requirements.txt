@@ -1,5 +1,5 @@
 Cython==0.25.2
 hypothesis==3.12.0
 pytest==3.0.7
-ujson==1.35
+ujson==5.4.0
 pytest-benchmark==3.0.0
