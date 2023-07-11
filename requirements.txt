@@ -1,4 +1,4 @@
-Cython==0.25.2
+Cython==0.29.23
 hypothesis==3.12.0
 pytest==3.0.7
 ujson==1.35

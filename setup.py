@@ -2,7 +2,7 @@ from setuptools import setup
 from setuptools.extension import Extension
 
 setup_requires = [
-    'cython>=0.x',
+    'cython>=0.29.23',
     'pytest-runner',
 ]
 
@@ -42,7 +42,7 @@ extensions = [
 
 setup(
     name='jsonsubset',
-    version='0.1.1',
+    version='0.1.2',
     url='https://github.com/kawmarco/jsonsubset',
     description="Extract and parse specific fields from a JSON string ",
     author="Marco Kawajiri",
